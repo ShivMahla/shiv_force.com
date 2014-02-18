@@ -1,0 +1,5 @@
+<apex:page controller="FBIntegration">
+<apex:form >
+<apex:commandButton value="Access Token" action="{! AccessToken}" rerender="abc"/>
+</apex:form>
+</apex:page>

@@ -1,0 +1,646 @@
+<!-- Copyright (c) 2012, 2013 All Rights Reserved
+//
+// This source is subject to the BigKite License granted to Skin Vitality, and only Skin Vitality.
+// All code is owned solely by BigKite and BigKite hereby grants
+// Skin Vitality a worldwide, perpetual, non-exclusive, non-transferable, royalty-free license to use and
+// modify such work product solely for its internal business purposes.
+// All other rights reserved. -->
+
+<apex:page showHeader="false"  standardController="Opportunity" extensions="calendarMainClass" sidebar="false" >
+    <head>
+        <apex:stylesheet value="{!$Page.CalenderMasterCSS}"/>
+        <title> Resource Calendar </title>
+    </head> 
+    <link rel="stylesheet" href="{!$Resource.JQueryCalenderCSS}" />
+    
+    <script src="{!$Resource.JQueryCalenderJS}"></script>
+    <script src="{!$Resource.JQueryUICalenderJS}"></script>
+    <script src="{!$Resource.jQueryLibrary}" type="text/javascript"></script>   
+    <script src="{!$Resource.IETFDateConvertor}" type="text/javascript" charset="utf-8" ></script>
+    <script src="{!$Resource.dhtmlxscheduler}" type="text/javascript" charset="utf-8" ></script>
+    <script src="{!$Resource.dhtmlxscheduler_dhx_terrace}" type="text/javascript" charset="utf-8"></script>
+    <script src="{!$Resource.dhtmlxscheduler_units}" type="text/javascript" charset="utf-8"></script> 
+    <script src="{!URLFOR($Resource.CalendarSchedular, 'CalendarSchedular/codebase/ext/dhtmlxscheduler_tooltip.js')}" type="text/javascript" charset="utf-8"></script> 
+    <script src="{!URLFOR($Resource.CalendarSchedular, 'CalendarSchedular/codebase/ext/dhtmlxscheduler_minical.js')}" type="text/javascript" charset="utf-8"></script>
+    <script src="{!URLFOR($Resource.CalendarSchedular, 'CalendarSchedular/codebase/ext/dhtmlxscheduler_year_view.js?v=3.5')}" type="text/javascript" charset="utf-8"></script>
+  
+ 
+    <LINK rel="stylesheet" media="screen" href="{!URLFOR($Resource.CalendarSchedular, 'CalendarSchedular/codebase/dhtmlxscheduler_dhx_terrace.css')}" type="text/css"/>
+
+    <body onload="init();" onresize="modSchedHeight()"> 
+    <script>
+        function modSchedHeight(){
+         
+            var headHeight = 100;
+            var sch = document.getElementById("scheduler_here");
+            sch.style.height = (parseInt(document.body.offsetHeight)-headHeight)+"px";
+           
+        }
+    </script>
+     <script type='text/javascript'>
+        var  clinicName = '{!clinic}';
+        var  clinicNameLabel = "{!selectedClinicName}";
+        clinicoptions = [];
+       
+    </script>
+    <style type="text/css">
+      .dhx_wrap_section :nth-child(4)
+      {
+       display:none;
+      }
+    </style>
+    <apex:form >
+    <div id="abcde">
+  
+    </div>
+        <table width="100%" height="100%" style="padding-top:10px; min-width:1000px;">
+        <tr>
+            <td colspan="3">
+                <div id="button">
+                           <!-- <a    onclick="javascript:    window.location = '/apex/StaffCalendar?clinicId='+clinicName + '&sDate=' + (new XDate( scheduler.getState().min_date)).toString('dd/MM/yyyy hh:mm TT' )  + '&eDate=' + (new XDate( scheduler.getState().max_date)).toString('dd/MM/yyyy hh:mm TT' )     "       class="button small white">Staff Calendar</a>  -->
+                            <a    href="/apex/StaffCalendar"  class="button small white">Staff Calendar</a>
+                            <a    onclick="javascript:   window.location = '/apex/ResourceCalendar?clinicId='+clinicName + '&sDate=' + (new XDate( scheduler.getState().min_date)).toString('yyyy-MM-dd HH:mm:ss' )  + '&eDate=' + (new XDate( scheduler.getState().max_date)).toString('yyyy-MM-dd HH:mm:ss' )     "    class="button small black">Resource Calendar</a>
+                            <a    onclick="javascript:    window.location = '/apex/CalendarSchedular?clinicId='+clinicName  + '&sDate=' + (new XDate( scheduler.getState().min_date)).toString('yyyy-MM-dd HH:mm:ss' )  + '&eDate=' + (new XDate( scheduler.getState().max_date)).toString('yyyy-MM-dd HH:mm:ss' )    "   class="button small white">Appointment Calendar</a>                 
+                            <a    href="https:/home/home.jsp"  class="button small white"><b>Home</b></a>
+                 </div>
+            </td>
+        </tr>
+        <tr>
+            <td width="14%" style="vertical-align :top; padding-left:5px;">
+                       <div id='clinicList'>
+                           <b><apex:outputlabel value="Clinic : " for="clinicPickList" style="color:#5e5349;"/></b>
+                           <apex:selectList value="{!clinic}" size="1" id="clinicPickList" style="width:150px;" onchange="refetchOnClinicChange();">
+                               <apex:selectOptions value="{!clinicnames}"/>
+                           </apex:selectList>
+                           <script type="text/javascript"> 
+                              clinicoptions =[
+                                
+                               <apex:variable value="{!0}" var="cntClinic"/>
+                               <apex:variable value="{!clinicList.size}" var="maxClinic"/>
+                               <apex:repeat value="{!clinicList}" var="C">           
+                                 {key:'{!C.id}', label:"{!C.Name}"}
+                                <apex:variable value="{!cntClinic+1}" var="cntClinic"/> 
+                                <apex:variable value="sdf" var="sdf" rendered="{! cntClinic!= maxClinic}" >,</apex:variable>
+                              </apex:repeat> 
+                            
+                            ]; 
+                           
+                           </script>
+                       </div>   
+                                      
+                        <!-- Resource CheckBox List -->                       
+                       <b>Resource List</b><br/>
+                       <apex:outputPanel id="resourceList" >
+                            <script type="text/javascript" charset="utf-8">
+                               sections=[
+                               <apex:variable value="{!0}" var="cntResource"/>
+                               <apex:variable value="{!resourcesList.size}" var="maxResource"/>
+                               <apex:repeat value="{!resourcesList}" var="R">           
+                                 {key:'{!R.u.id}', label:"{!R.u.Name&'-'& LEFT(R.u.Clinic__r.Clinic_Code__c,2  )}"}
+                                <apex:variable value="{!cntResource+1}" var="cntResource"/> 
+                                <apex:variable value="sdf" var="sdf" rendered="{! cntResource != maxResource}" >,</apex:variable>
+                              </apex:repeat> 
+                            ];
+                             
+                               resourcesClinic ={
+                               <apex:variable value="{!0}" var="cntResource"/>
+                               <apex:variable value="{!resourcesList.size}" var="maxResource"/>
+                               <apex:repeat value="{!resourcesList}" var="R">           
+                                 "{!R.u.id}" :"{!R.u.Clinic__r.id}" 
+                                <apex:variable value="{!cntResource+1}" var="cntResource"/> 
+                                <apex:variable value="sdf" var="sdf" rendered="{! cntResource != maxResource}" >,</apex:variable>
+                              </apex:repeat> 
+                            };    
+                            
+                           
+                            clinicNameLabel = "{!selectedClinicName}";
+                            scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:10, step:10});     
+                            scheduler.resetLightbox();
+                            sectionsbkp =[];                             scheduler.config.lightbox.sections=[    
+                                    { name: "clinicName", height:23, type:"select", options:clinicoptions,map_to:"clinic" },
+                                    { name: "staffName", height: 21, map_to: "staffName", type: "template" },
+                                    { name: "StartTime", height: 21, map_to: "startTimeDisplay", type: "template" },
+                                    { name: "EndTime", height: 21, map_to: "endTimeDisplay", type: "template" },
+                                    { name:"custom", height:23, type:"select", options:sections, map_to:"section_id" },
+                                    { name:"time", height:72, type:"time", map_to:"auto"}   
+                            ]
+                            sectionsbkp =[]; 
+                            scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:10, step:10});     
+                          
+                           </script>
+                           <fieldset>
+                               <legend><input class="chkBox" type="checkbox" id="Resource" checked="checked" onchange="scheduler.clearAll(); if( $(this).is(':checked') ){ $('.Resource').attr('checked', 'checked');   }else{ jQuery('.Resource').attr('checked', '') };$('input[id$=\'ResourceIdList\']').val('EMPTY');  $('#pagemask').css('display','block') ; setTimeout(function(){ loadResourceEvents();},600);" /><label for = "Staff">Select All</label></legend>
+                               <ul>
+                                   <apex:repeat value="{!resourcesList}" var="R">
+                                       <li>
+                                           <input  checked="checked" type="checkbox" id="{!R.u.id}" alt="{!R.u.id}" size ="1" class="Resource" onchange="userCheckBoxChange(this,'{!R.u.id}');"/> 
+                                           <label for="{!R.u.id}" style="width:130px; background-color:#1796B0; border:none;">  
+                                              {!R.u.Name&'-'& LEFT(R.u.Clinic__r.Clinic_Code__c,2  )}
+                                           </label>
+                                       </li>
+                                   </apex:repeat>
+                               </ul>
+                           </fieldset> 
+                       </apex:outputPanel> 
+            </td>
+            <td  width="85%" style="min-width:1000px" valign="top">
+                <div id="scheduler_here" class="dhx_cal_container" style='width:100%;height:100%;'>
+                    <div class="dhx_cal_navline">    
+                    <div class="dhx_cal_prev_button">&nbsp;</div>    
+                    <div class="dhx_cal_next_button">&nbsp;</div>    
+                    <div class="dhx_cal_today_button"></div>    
+                    <div class="dhx_cal_date"></div>    
+                    <div class="dhx_cal_tab" name="day_tab" style="right:332px;"></div>    
+                    <div class="dhx_cal_tab" name="week_tab" style="right:268px;"></div>    
+                    <div class="dhx_cal_tab" name="month_tab" style="right:204px;"></div>  
+                    <div class="dhx_cal_tab" name="unit_tab" style="right:280px;"></div>
+                    <div style="left:33%;" class="dhx_minical_icon" id="dhx_minical_icon" onclick="show_minical()">&nbsp;</div> 
+                 </div>
+
+        <div class="dhx_cal_header">
+
+        </div>
+
+        <div class="dhx_cal_data" id="dhx_cal_data">
+
+        </div>      
+
+    </div>
+
+            </td>
+             
+        </tr>
+    </table>
+    <apex:outputPanel id="SAVErorrPanel">
+    <script type="text/javascript">
+      if( '{!SAVE}' != 'OK'  )
+      alert( '{!SAVE}'  );
+     </script>
+    
+    <!-- -------------------------------------------------------------------------------- -->
+    
+   
+    
+      <apex:inputText id="StaffName" value="{!staffId}" style="display:none;" /> 
+      <apex:inputText styleClass="InputDisabled"   id="StartDateTime" value="{!StartDateTime}" style="display:none;"/>
+      <apex:inputText styleClass="InputDisabled"   id="EndDateTime" value="{!EndDateTime}" style="display:none;"/>     
+      <apex:inputText id="ResourceId" value="{!ResourceId}" style="display:none;" /> 
+      <apex:inputText id="selectedClinicName" value="{!selectedClinicName}" style="display:none;" /> 
+    </apex:outputPanel>
+       <input type="text" style="display:none;" id="AppoinmentIdList" value="EMPTY"/>
+    <input type="text" style="display:none;" id="StaffIdList" value="EMPTY"/>
+    <input type="text" style="display:none;" id="ResourceIdList" value="EMPTY"/>
+    <input type="text" style="display:none;" id="startTime" value=""/>
+    <input type="text" style="display:none;" id="endTime" value=""/>
+  
+    <apex:actionFunction name="selectedClinic" action="{!clinicChanged}" rerender="resourceList,scheduler_here,errorMsgs" onComplete="loadResourceEvents(); $('#pagemask').css('display','none'); ">
+             <apex:param name="clinicId" value="" />
+    </apex:actionFunction>
+    <apex:actionFunction name="saveReschedule_actionFunction" action="{!createResourceSchedule}" onComplete=" reloadCalender();$('#pagemask').css('display','none');fadeOutErrors();    " rerender="errorMsgs,SAVErorrPanel">
+            <apex:param name="eventId" value="" />
+            <apex:param name="startDateTime" value="" />
+            <apex:param name="endDateTime" value="" />
+            <apex:param name="ObjectName" value=""/>
+    </apex:actionFunction>
+     <apex:actionFunction name="updateReschedule_actionFunction" action="{!updateReschedule}" onComplete=" reloadCalender();$('#pagemask').css('display','none');fadeOutErrors();    " rerender="errorMsgs,SAVErorrPanel">
+            <apex:param name="eventId" value="" />
+            <apex:param name="startDateTime" value="" />
+            <apex:param name="endDateTime" value="" />
+            <apex:param name="ObjectName" value=""/>
+    </apex:actionFunction>
+    
+    <!-- --------------------------------------------------------------------------------- -->
+    
+    <script type="text/javascript" charset="utf-8">
+    
+    function init() {
+        window.resizeTo(950,700)
+        modSchedHeight();
+        
+        //code to make time slot for 10 minutes
+        var step = 10;
+        var format = scheduler.date.date_to_str("%h:%i %A");        
+        scheduler.config.hour_size_px=(60/step)*22;
+        scheduler.templates.hour_scale = function(date){
+            html="";
+            for (var i=0; i<60/step; i++){
+                html+="<div style='height:21px;line-height:21px;'>"+format(date)+"</div>";
+                date = scheduler.date.add(date,step,"minute");
+            }
+            return html;
+        }
+           
+          sections=[
+           <apex:variable value="{!0}" var="cntResource"/>
+           <apex:variable value="{!resourcesList.size}" var="maxResource"/>
+           <apex:repeat value="{!resourcesList}" var="R">           
+             {key:"{!R.u.id}", label:"{!R.u.Name&'-'& LEFT(R.u.Clinic__r.Clinic_Code__c,2)}",clinic:"{!R.u.Clinic__c}"} 
+            <apex:variable value="{!cntResource+1}" var="cntResource"/> 
+            <apex:variable value="sdf" var="sdf" rendered="{! cntResource != maxResource}" >,</apex:variable>
+          </apex:repeat> 
+        ];   
+        
+          var resourceIds = "";
+          <apex:repeat value="{!resourcesList}" var="R">           
+            resourceIds  = resourceIds  + "{!R.u.Id};";            
+          </apex:repeat> 
+         
+         resourcesClinic ={
+           <apex:variable value="{!0}" var="cntResource"/>
+           <apex:variable value="{!resourcesList.size}" var="maxResource"/>
+           <apex:repeat value="{!resourcesList}" var="R">           
+             "{!R.u.id}" :"{!R.u.Clinic__r.id}" 
+            <apex:variable value="{!cntResource+1}" var="cntResource"/> 
+            <apex:variable value="sdf" var="sdf" rendered="{! cntResource != maxResource}" >,</apex:variable>
+          </apex:repeat> 
+        };   
+        scheduler.config.full_day = false;
+        scheduler.config.time_step = 10;// Default teimperiod for light box
+        scheduler.config.hour_date = "%h:%i %A";// To show events in 12 hour format
+        scheduler.config.api_date = "%Y-%m-%d %h:%i %A"; //Sets date format that will be used while specifying dates through API methods (format string variations). Used to parse incoming dates.
+        scheduler.config.xml_date="%Y-%m-%d %H:%i";//Sets the date format that is used while converting a string from an XML file into a date object
+        scheduler.config.repeat_date="%Y-%m-%d %h:%i %A";
+        scheduler.config.mark_now = true;
+        scheduler.config.positive_closing = true;
+        scheduler.config.multi_day = false;
+        scheduler.config.details_on_create=true;
+        scheduler.config.details_on_dblclick=true;
+        scheduler.config.full_day = false;
+        scheduler.config.first_hour = 0.02;
+        scheduler.config.last_hour = 24;
+        scheduler.config.multi_day = true;
+        scheduler.config.scroll_hour = 8;
+        scheduler.config.icons_select=[ ];
+        scheduler.config.start_on_monday = false;
+        scheduler.locale.labels.section_clinicName="Clinic Name";
+        scheduler.locale.labels.section_staffName="Staff Name";
+        scheduler.locale.labels.section_StartTime="Start Time";
+        scheduler.locale.labels.section_EndTime="End Time";
+        scheduler.locale.labels.section_custom="Resource";
+        scheduler.locale.labels.unit_tab = "Resources"
+        scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:10, step:10});     
+        scheduler.config.buttons_left=["dhx_save_btn","dhx_cancel_btn"];
+        scheduler.config.buttons_right=[];                 
+   
+    scheduler.config.lightbox.sections=[    
+            { name: "clinicName", height:23, type:"select", options:clinicoptions,map_to:"clinic" },
+            { name: "staffName", height: 21, map_to: "staffName", type: "template" },
+            { name: "StartTime", height: 21, map_to: "startTimeDisplay", type: "template" },
+            { name: "EndTime", height: 21, map_to: "endTimeDisplay", type: "template" },
+            { name:"custom", height:23, type:"select", options:sections, map_to:"section_id" },
+            { name:"time", height:72, type:"time", map_to:"auto"}   
+    ]
+        
+    
+         scheduler.templates.lightbox_header = function(start, end, event){
+            return "<b>New Schedule</b>";
+        } 
+        scheduler.form_blocks.time.set_value=function(node,value,ev){ 
+        node.style.display= 'none'; // editor area
+        node.previousSibling.style.display= 'none'; //section header
+        scheduler.setLightboxSize(); //correct size of lightbox
+       }
+    
+    scheduler.form_blocks.template.set_value=function(node,value,ev){
+        console.log(node.previousSibling.innerHTML);
+        
+        {
+            node.style.display= 'block'; 
+            node.previousSibling.style.display='block'; 
+            if( node.previousSibling.innerHTML ==  'Staff Name'   )
+             node.innerHTML = "<input id='inputLookupStaffName' type='text'></input><img src='https:/img/func_icons/util/lookup20.gif' class='imgLookup'  onclick=\"openLookupPopup( \'inputLookupStaffName\', \'{!$Component.StaffName}\' , \'staff\'      )\"></img>"
+            if( node.previousSibling.innerHTML ==  'Start Time'   )
+             node.innerHTML = "<input id='EventStartTime' readonly='readonly' type='text'></input>"
+            if(node.previousSibling.innerHTML ==  'End Time'   )
+             node.innerHTML = "<input id='EventEndTime' readonly='readonly' type='text'></input>"
+
+        } 
+        
+    } 
+     
+     
+        scheduler.form_blocks.select.set_value=function(node,value,ev){
+        
+        if( (node.previousSibling.innerHTML == 'Clinic Name' )   )
+        {
+             if(  scheduler.getState().mode == 'unit' )
+             {   
+                if( clinicName == 'ALL' )
+                 {
+                        node.firstChild.value =  resourcesClinic[ev.section_id]  ;
+                        node.firstChild.disabled = true  ; 
+                 }
+                 else
+                 {
+                        node.firstChild.value= clinicName ;
+                        node.firstChild.disabled = true  ; 
+                 }
+             }
+             else
+             {     
+                   if( clinicName == 'ALL' )
+                   {
+                        node.firstChild.value =  clinicName  ;
+                        node.firstChild.disabled = false; 
+                   }
+                   else
+                   {     
+                        node.firstChild.value= clinicName ;
+                        node.firstChild.disabled = true  ; 
+                   }  
+              }
+        }        
+        else
+        if( (node.previousSibling.innerHTML == 'Resource' )   )
+        {    
+            if( scheduler.getState().mode == 'unit' )  
+            {  node.firstChild.value=value ;
+               node.firstChild.disabled = true  ; 
+            }
+            else
+            {
+                node.firstChild.value=value ;
+                node.firstChild.disabled = false; 
+                
+            }
+             
+        } 
+     }
+         
+       
+     scheduler.templates.event_text=function(start,end,event){ 
+            
+                if(  ( event.url == '') || ( event.url == undefined) || ( event.url == null ))
+                event.url = '';
+                if(  ( event.ResourceName== '') || ( event.ResourceName== undefined) || ( event.ResourceName== null ))
+                event.ResourceName = '';
+                if(  ( event.clinic== '') || ( event.clinic== undefined) || ( event.clinic== null ))
+                event.clinic = '';
+                if(  ( event.staffNameValue== '') || ( event.staffNameValue== undefined) || ( event.staffNameValue== null ))
+                event.staffNameValue = '';
+                return  "<a href='"+ event.url +"'>" + event.ResourceName+ "</a>&nbsp;<br/>"+event.clinic+ "<br/>&nbsp;"+  event.staffNameValue
+           }
+        
+        scheduler.init('scheduler_here',null,"unit");
+        
+        var xdate =  new XDate( scheduler.getState().min_date)  
+        $("#startTime").val( xdate.toString('yyyy-MM-dd HH:mm:ss' ) );
+        
+        xdate =  new XDate( scheduler.getState().max_date);     
+        $("#endTime").val( xdate.toString('yyyy-MM-dd HH:mm:ss' ) );
+        $("input[id$='ResourceIdList']").val(resourceIds   );
+        $("input[id$='AppoinmentIdList']").val('Booked;Cancelled;Confirmed;No show;Arrived;Cashed out');
+        $("input[id$='StaffIdList']").val()
+        console.log('https:/apex/ResourceJson?clinicId=ALL&appIds=EMPTY&staffIds=EMPTY;&resourceIds='+resourceIds +'&startDate='+$("#startTime").val()+'&endDate='+$("#endTime").val()   );
+        scheduler.load('https:/apex/ResourceJson?clinicId=ALL&appIds=EMPTY&staffIds=EMPTY;&resourceIds='+resourceIds +'&startDate='+$("#startTime").val()+'&endDate='+$("#endTime").val(),'json'  );
+        scheduler.attachEvent("onDblClick", function (event_id){
+          return false;
+      
+       });
+        
+        scheduler.attachEvent("onViewChange", function (mode , date){          
+             var xdate =  new XDate( scheduler.getState().min_date)  
+             $("#startTime").val( xdate.toString('yyyy-MM-dd HH:mm:ss' ) );
+             xdate =  new XDate( scheduler.getState().max_date);     
+             $("#endTime").val( xdate.toString('yyyy-MM-dd HH:mm:ss' ) ); 
+             var clinicidd = $('select[id$="clinicPickList"]').val();  
+             scheduler.clearAll();
+             console.log('https:/apex/ResourceJson?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("input[id$='startTime']").val()+'&endDate='+$("input[id$='endTime']").val(),'json');
+             scheduler.load('https:/apex/ResourceJson?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("input[id$='startTime']").val()+'&endDate='+$("input[id$='endTime']").val(),'json');
+              
+        });
+        
+        scheduler.attachEvent("onBeforeEventChanged", function(event_object, native_event, is_new, unmodified_event){
+                  
+                    if( unmodified_event.section_id == event_object.section_id )
+                    return true;
+                    else
+                    return  false;
+       });
+        
+        
+        
+        scheduler.templates.tooltip_text = function(start,end,event) {
+            var htmlText;
+            var xdate1 =  new XDate(  event.start_date)  ;
+            var xdate2 =  new XDate(  event.end_date);
+            htmlText  = "<table cellspacing='0' cellpadding='0' border='0' class='detailList'>" +"<tbody>"
+                                  +" <tr><td class='labelCol'><b>Resource Name :</b> &nbsp</td><td class='dataCol'>" + event.ResourceName+ "</td></tr>"
+                                  +" <tr><td class='labelCol'><b>Staff Name :</b> &nbsp</td><td class='dataCol'>" + event.staffName+ "</td></tr>"
+                                  +" <tr><td class='labelCol'><b>Clinic :</b> &nbsp</td><td class='dataCol'>" + event.clinic + "</td></tr>"
+                                  +" <tr><td class='labelCol'><b>Open Time :</b> &nbsp</td><td class='dataCol'>" +    xdate1.toString('dd/MM/yyyy hh:mm TT' )   + "</td></tr>"
+                                  +" <tr><td class='labelCol last'><b>Close Time :</b> &nbsp</td><td class='dataCol last'>" + xdate2.toString('dd/MM/yyyy hh:mm TT' ) + "</td></tr>" 
+                                +"</tbody>"
+                            +"</table>"
+            return htmlText;                
+        }
+        scheduler.attachEvent("onDblClick", function (event_id){
+           return false;
+        });        
+                
+        scheduler.attachEvent("onClick", function (event_id, native_event_object){
+                 return false;
+        });
+        scheduler.attachEvent("onEventChanged", function(event_id,event_object){
+                   $('#pagemask').css('display','block')
+                    var xdate =  new XDate(event_object.start_date); 
+                    var startDateTime = xdate.toString('yyyy-MM-dd HH:mm:ss');
+                    xdate =  new XDate(event_object.end_date);     
+                    var endDateTime = xdate.toString('yyyy-MM-dd HH:mm:ss');   
+                    var resource_id = event_id;
+                    appointment_object_name =  event_object.ObjectName; 
+                    updateReschedule_actionFunction(resource_id ,startDateTime ,endDateTime ,appointment_object_name);
+                   $('#pagemask').css('display','none');
+        });
+        
+        
+         scheduler.attachEvent(" ", function (event_id){
+       
+         var xdate =  new XDate( scheduler.getEventStartDate( event_id));          
+         document.getElementById('EventStartTime').value =   xdate.toString('yyyy-MM-dd HH:mm:ss'); 
+         xdate =  new XDate( scheduler.getEventEndDate( event_id));          
+         document.getElementById('EventEndTime').value =     xdate.toString('yyyy-MM-dd HH:mm:ss'); 
+      
+       });
+        
+      
+         scheduler.attachEvent("onEventCreated", function(id, native_event) {           
+           var ev = scheduler.getEvent(id);
+            ev.description      = "<input id='inputLookupClinic' type='text' value=''></input><img src='https:/img/func_icons/util/lookup20.gif' class='imgLookup'  onclick=\"openLookupPopup( \'inputLookupStaffName\', \'{!$Component.StaffName}\' , \'staff\'      )\"></img>"; // my_template is the value of the 'map_to' property
+            ev.staffName        = "<input id='inputLookupStaffName' type='text'></input><img src='https:/img/func_icons/util/lookup20.gif' class='imgLookup'  onclick=\"openLookupPopup( \'inputLookupStaffName\', \'{!$Component.StaffName}\' , \'staff\'   )\"></img>"; // my_template is the value of the 'map_to' property
+            ev.startTimeDisplay = "<input id='EventStartTime' readonly='readonly' type='text'></input>"; // my_template is the value of the 'map_to' property
+            ev.endTimeDisplay   = "<input id='EventEndTime' readonly='readonly' type='text'></input>";; // my_template is the value of the 'map_to' property
+            ev.color = '#FCD116';
+            
+        });
+        
+         scheduler.attachEvent("onLightbox", function (event_id){
+        try
+        {
+          var xdate =  new XDate( scheduler.getEventStartDate( event_id));          
+         document.getElementById('EventStartTime').value =   xdate.toString('MM/dd/yy hh:mm TT'); 
+         xdate =  new XDate( scheduler.getEventEndDate( event_id));          
+         document.getElementById('EventEndTime').value =     xdate.toString('MM/dd/yy hh:mm TT'); 
+        }
+        catch(err)
+        {
+         
+        }
+       }); 
+        
+        scheduler.attachEvent("onEventSave",function(id,data,is_new_event){        
+           $('#pagemask').css('display','block')  
+         
+            document.getElementById(  '{!$Component.ResourceId}' ).value         =   data.section_id   
+           var xdate =  new XDate( scheduler.getEventStartDate( id));          
+           document.getElementById(  '{!$Component.StartDateTime}' ).value      =   xdate.toString('yyyy-MM-dd HH:mm:ss'); 
+            xdate =  new XDate( scheduler.getEventEndDate( id )); 
+           document.getElementById(  '{!$Component.EndDateTime}' ).value        =    xdate.toString('yyyy-MM-dd HH:mm:ss'); 
+           
+           if(  ( document.getElementById(  '{!$Component.StaffName}' ).value == '') || ( document.getElementById(  '{!$Component.StaffName}' ).value == undefined) || ( document.getElementById(  '{!$Component.StaffName}' ).value == null ))
+             document.getElementById(  '{!$Component.StaffName}' ).value = 'NOSTAFF';
+         
+         
+           if( resourcesClinic[data.section_id] != data.clinic )
+           {
+             alert( 'Resource does not belong to selected clinic');
+              $('#pagemask').css('display','none');
+              return false;
+           } 
+           if( ( clinicName  == 'ALL' ) && (  data.clinic == ''||   data.clinic == undefined ||   data.clinic == null ))
+           {  
+             alert( 'Select clinic');
+             $('#pagemask').css('display','none');
+             return false;
+           }
+           else
+           {
+            document.getElementById(  '{!$Component.selectedClinicName}' ).value         = data.clinic;
+           }
+           saveReschedule_actionFunction(); 
+           return true;
+       })
+        
+    
+    }
+   </script> 
+   
+   
+   
+    
+  </apex:form>  
+    </body>
+  
+  <script type="text/javascript">
+      function userCheckBoxChange(ele,userid){ // filter in or out events with this user id
+        
+        
+        var clinicidd = $('select[id$="clinicPickList"]').val();      
+        scheduler.clearAll();        
+        
+       if( (! $(ele).attr('checked') ) &&  $(ele).hasClass('Resource') ){     $("input[id$='ResourceIdList']").val( $("input[id$='ResourceIdList']").val().split(';'+userid).join('').split(userid).join(''));               $('#Resource').attr("checked","") ;    };
+         if( (! $(ele).attr('checked') ) &&  $(ele).hasClass('Resource') )
+        {
+          
+           for (var prop in sections) {    if ( sections[prop].key == userid ) { sectionsbkp.push( sections[prop] ) ;   sections.splice(prop,1 ); }     }
+           scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:10, step:10});     
+         
+        }
+       
+       if( ( $(ele).attr('checked') ) && $(ele).hasClass('Resource') ){       $("input[id$='ResourceIdList']").val( $("input[id$='ResourceIdList']").val() + ';'+ userid   );                    if(   $(".Resource:checked").length == $(".Resource").length   ) {  $('#Resource').attr('checked', 'checked')    };      }
+        console.log('https:/apex/ResourceJson?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("input[id$='startTime']").val()+'&endDate='+$("input[id$='endTime']").val() ,'json');
+        scheduler.load('https:/apex/ResourceJson?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("input[id$='startTime']").val()+'&endDate='+$("input[id$='endTime']").val() ,'json');
+        if( ( $(ele).attr('checked') ) && $(ele).hasClass('Resource') )
+        {
+           for (var prop in sectionsbkp) {     if ( sectionsbkp[prop].key == userid ) { sections.push( sectionsbkp[prop] ) ;    sectionsbkp.splice(prop,1 ); }     }
+           scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:10, step:10});     
+         
+        }
+          $('#pagemask').css('display','none');
+    }
+    
+    // To fir the chang event for resource chekbox
+     function loadResourceEvents(){
+        $('.Resource').change();
+    }
+    
+    //On clinic chang refetch resource list
+    function refetchOnClinicChange(){
+        $('#pagemask').css('display','block');
+        scheduler.clearAll();  
+        $('input[id$=\'ResourceIdList\']').val('EMPTY');
+        $('input[id$=\'StaffIdList\']').val('EMPTY'); 
+        $('input[id$=\'AppoinmentIdList\']').val('EMPTY');          
+        clinicName  = $('select[id$="clinicPickList"]').val();  
+        selectedClinic(clinicName  );    
+    }
+    
+   
+     var newWin=null;
+     function openLookupPopup(name, id , page)
+     {
+      var url="/apex/LookupPopup?namefield=" + name + "&idfield=" + id + "&page=" + page + '&clinic='+clinicName      ;
+      newWin=window.open(url, 'Popup','height=500,width=600,left=100,top=100,resizable=no,scrollbars=yes,toolbar=no,status=no');
+      if (window.focus) 
+      {
+       newWin.focus();
+      }
+        
+         return false;
+        }
+           
+     function closeLookupPopup()
+     {
+        if (null!=newWin)
+        {
+           newWin.close();
+        }  
+     }
+   
+   
+    //Select all functionality for Resource
+    function removeAllResource(){
+        scheduler.clearAll();
+        if( jQuery('#Resource').is(':checked') ){
+            jQuery('.Resource').attr('checked', 'checked');
+        }
+        else{
+            jQuery('.Resource').attr('checked', '');
+            jQuery('input[id$=\'ResourceIdList\']').val('EMPTY');
+        }
+        loadResourceEvents();        
+    }
+     function  reloadCalender()
+     {
+             var xdate =  new XDate( scheduler.getState().min_date)  
+             $("#startTime").val( xdate.toString('yyyy-MM-dd HH:mm:ss' ) );
+             xdate =  new XDate( scheduler.getState().max_date);     
+             $("#endTime").val( xdate.toString('yyyy-MM-dd HH:mm:ss' ) ); 
+             var clinicidd = $('select[id$="clinicPickList"]').val();  
+             scheduler.clearAll();
+             console.log('https:/apex/ResourceJson?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("#startTime").val()+'&endDate='+$("#endTime").val() );
+             scheduler.load('https:/apex/ResourceJson?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("#startTime").val()+'&endDate='+$("#endTime").val()  );
+              
+         
+     }
+     function show_minical(){
+      if (scheduler.isCalendarVisible())
+         scheduler.destroyCalendar();
+      else
+         scheduler.renderCalendar({
+            position:"dhx_minical_icon",
+            date:scheduler._date,
+            navigation:true,
+            handler:function(date,calendar){
+               scheduler.setCurrentView(date);
+               scheduler.destroyCalendar()
+            }
+         });
+   }
+  </script>  
+    
+    
+    <div id="pagemask" style="background-color:#CCCCCC;; opacity:0.6; z-index:9999;display:none;position:fixed;top:0px;left:0px;width:100%;height:100%"><apex:image url="{!$Resource.Preloader}" style="position:fixed;top:45%;left:45%" /></div>
+    
+    
+</apex:page>

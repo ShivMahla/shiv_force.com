@@ -1,0 +1,164 @@
+<!-- Copyright (c) 2012, 2013 All Rights Reserved
+//
+// This source is subject to the BigKite License granted to Skin Vitality, and only Skin Vitality.
+// All code is owned solely by BigKite and BigKite hereby grants
+// Skin Vitality a worldwide, perpetual, non-exclusive, non-transferable, royalty-free license to use and
+// modify such work product solely for its internal business purposes.
+// All other rights reserved. -->
+
+<!--Visualforce page for view appointment| Durgesh Choubey | KVP Business Solution|-->
+<apex:page StandardController="Opportunity" tabStyle="case" extensions="pagrefForClone,TreatmentPitch" standardStylesheets="True" >
+<apex:sectionHeader title="{!opportunity.name}"/>
+  <apex:form >
+  
+  <apex:pageMessages />
+  <apex:pageBlock Title="Appointment Detail" mode="inlineEdit" > 
+      <apex:pageBlockButtons >
+          <apex:commandButton action="{!Edit}" value="Edit" id="editButton" />
+          <apex:commandButton value="Save" action="{!save}" id="saveButton" style="display:none;" />  
+          <apex:commandButton onclick="resetInlineEdit()" id="cancelButton" value="Cancel" style="display:none;" /> <!--style="display:none;"-->
+          <apex:commandButton action="{!Delete}" value="Delete" id="deleteButton"/>
+          <apex:commandButton value="Clone" action="{!pageref}" onclick="location.href='https://c.cs10.visual.force.com/apex/AppointmentClone'" id="cloneButton"/>
+          <!--<apex:commandButton value="Share" onclick="location.href='{!URLFOR($Action.Opportunity.Share,Opportunity.Id)}'" id="sharingButton"/>-->
+      </apex:pageBlockButtons> 
+      
+      <apex:pageblocksection columns="2" >
+        
+            <apex:OutputField value="{!opportunity.name}"/>    <apex:OutputField value="{!opportunity.Clinic__c}"/>
+            
+            <apex:OutputField value="{!opportunity.Patient_Name__c}"/>    <apex:OutputField value="{!opportunity.LeadSource}">            
+                <apex:inlineEditSupport showOnEdit="saveButton, cancelButton"  hideOnEdit="editButton, sharingButton, cloneButton, deleteButton" event="ondblclick"  changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+            </apex:outputField>
+            <apex:OutputField value="{!opportunity.Staff_Name__c}"/>  <apex:OutputField value="{!opportunity.Referral_Card_Id1__c}"/>                   
+            
+            <apex:OutputField value="{!opportunity.AccountId}"/>         <apex:OutputField value="{!opportunity.CampaignId}"/>
+            
+            <apex:OutputField value="{!opportunity.Appointment_Start_Date_Time__c}"/> <!--<apex:OutputField value="{!opportunity.Consult_Name__c}"/>-->
+            <apex:OutputField value="{!opportunity.Appointment_End_Date_Time1__c}"/> <apex:OutputField value="{!opportunity.StageName}"/>
+                                  </apex:pageblocksection> 
+            
+       
+       
+        <apex:pageBlockSection columns="2" title="Treatment Details" >
+       
+            <apex:OutputField value="{!opportunity.Treatment_Name__c}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton"  hideOnEdit="editButton, sharingButton, cloneButton, deleteButton" event="ondblclick"  changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+            </apex:outputField> 
+            <apex:outputField value="{!opportunity.Resource__c}"/>           
+            <apex:OutputField value="{!opportunity.Treatment_Complete__c}"/>             
+           <apex:OutputField value="{!opportunity.New_Appointment__c}"/>                                     
+            <!--<apex:OutputField value="{!opportunity.Due_Amount__c}"/>
+           <apex:OutputField value="{!opportunity.Appointment_End_Date_Time__c}"/>-->
+        </apex:pageBlockSection>
+            
+         
+        <apex:pageBlockSection columns="2" title="Appointment Other Information" >
+            <apex:OutputField value="{!opportunity.Follow_Up_Date__c}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton"  hideOnEdit="editButton, sharingButton, cloneButton, deleteButton" event="ondblclick"  changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+            </apex:outputField> 
+            <apex:OutputField value="{!opportunity.Cancellation_Reasons__c}"/>
+            <apex:OutputField value="{!opportunity.Appointment_Follow_Up_Date__c}"/>
+            <apex:OutputField value="{!opportunity.Reason_For_Rescheduling__c }"/>
+        </apex:pageBlockSection> 
+        
+        <apex:pageBlockSection columns="2" title="Wagjag Details" >
+            <apex:OutputField value="{!opportunity.Associated_Wagjag_ID__c}"/>
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton"  hideOnEdit="editButton, sharingButton, cloneButton, deleteButton" event="ondblclick"  changedStyleClass="myBoldClass" resetFunction="resetInlineEdit">
+            
+            <apex:OutputField value="{!opportunity.Wagjag_Id_Used__c}"/>
+            
+            <apex:inputField value="{!opportunity.Expiry_Date__c}"/>
+            <apex:OutputField value="{!opportunity.Redeemed_Date_Time__c}"/>
+            <apex:OutputField value="{!opportunity.Total_Purchase__c}"/>
+            <apex:OutputField value="{!opportunity.Description__c}"/>
+            <apex:OutputField value="{!opportunity.Discount__c}"/>
+            <apex:OutputField value="{!opportunity.Quantity__c}"/>
+            <apex:OutputField value="{!opportunity.Services__c}"/>
+            <apex:OutputField value="{!opportunity.IsActive__c}"/>
+            <apex:OutputField value="{!opportunity.Unlimited__c}"/>
+            <apex:OutputField value="{!opportunity.Override__c}"/>
+            </apex:inlineEditSupport>
+        </apex:pageBlockSection>
+
+        
+        <apex:pageBlockSection columns="2" title="Webcam" >          
+            <apex:OutputField value="{!opportunity.Webcam_Required__c}">
+                    <apex:inlineEditSupport showOnEdit="saveButton, cancelButton"  hideOnEdit="editButton, sharingButton, cloneButton, deleteButton" event="ondblclick"  changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+            </apex:outputField> 
+            <apex:OutputField value="{!opportunity.Webcam_Type__c}"/> 
+            <apex:OutputField value="{!opportunity.Webcam_Doctor__c}"/>        
+            <apex:OutputField value="{!opportunity.Is_Update__c}"/>   
+        </apex:pageBlockSection>
+        
+      <apex:pageBlockSection columns="2" title="System Information" >               
+            <apex:OutputText label="Created By" Value=" {!opportunity.CreatedBy.Name},{!opportunity.CreatedDate}"/> 
+            <apex:OutputText label="Last Modified By" Value=" {!opportunity.LastModifiedBy.Name},{!opportunity.LastModifiedDate}"/>           
+            
+        </apex:pageBlockSection>
+    
+    <br></br><br></br>
+
+    </apex:pageblock>
+
+</apex:form>
+
+ <apex:form >
+        <apex:pageblock >
+        <apex:pageblockButtons location="top">    
+        <apex:commandButton Value="Update Pitch Status" action="{!mysave}"/>
+        </apex:pageblockButtons>              
+        <table width="100%">
+        <tr>
+        <td width = "10%">
+        <b><apex:OutputText Value="Pitch Number"/></b>
+        </td>
+        <td width = "30%">
+        <b><apex:OutputText Value="Treatment Name"/></b>
+        </td>
+        <td width = "30%">
+        <b><apex:OutputText Value="Pitch Name"/></b>
+        </td>
+        <td width = "20%">
+        <b><apex:OutputText Value="Pitch Completed"/></b>
+        </td>
+        </tr>
+        </table>
+    
+    
+ 
+     <apex:repeat value="{!tpitch}" var="t">
+        <table width="100%">
+        <tr>
+        <td width = "10%">
+        <apex:OutputField Value="{!t.Treatment_Number__c}"/>
+        </td>
+        <td width = "30%">
+        <apex:OutputField Value="{!t.Treatment_Name__c}"/>
+        </td>
+        <td width = "30%">
+        <apex:OutputField Value="{!t.Name}"/>
+        </td>
+        <td width = "20%">
+        <apex:inlineEditSupport >
+        <apex:OutputField Value="{!t.Pitch_Completed__c}"/>
+        </apex:inlineEditSupport>
+        </td>
+        </tr> 
+        </table>
+     </apex:repeat>
+     </apex:pageblock>
+ </apex:form>     
+
+<br></br><br></br>
+
+
+<!--<apex:relatedList list="OpportunityLineItems" />-->
+<apex:relatedList list="Appointment_Blocks__r"/>
+<apex:relatedList list="Sales_Quotes__r"/>
+<apex:relatedList list="Treatment_Pitch_Informations__r"/>
+<apex:relatedList list="Invoices__r"/>
+<!--<apex:relatedList list="Quotes__r"/>-->
+<apex:relatedList list="OpenActivities" />
+<apex:relatedList list="ActivityHistories" /> 
+<apex:relatedList list="NotesAndAttachments" />
+</apex:page>

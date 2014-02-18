@@ -1,0 +1,35 @@
+<apex:page >
+	<div class="modal-header">
+	  <div class="title"><span class="title-text">Disposition History</span></div>
+	</div>
+	<div class="modal-container modal-dt-history">
+	  <div class="sub-title {{data.lastRiskId | dispositionColor}}"> 
+	    <p>{{data.lastRiskLevel}} for the past {{data.numberOfdays}}<span ng-if="data.numberOfDays != 1">day</span><span ng-if="data.numberOfDays == 1">days</span></p>
+	  </div>
+	  <div class="graph">
+	    <cs-chart chart-type="Line" chart-data="data.graph" chart-options="data.graphOptions" chart-height="250" chart-width="900"></cs-chart>
+	  </div>
+	  <table id="history-table" class="bordered-table big-table padded-table color-interval span-10">
+	    <thead>
+	      <tr>
+	        <th></th>
+	        <th>Disposition</th>
+	        <th>Date</th>
+	        <th>Reasons</th>
+	        <th>Notes / Next Steps</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="history in data.history" class="history-row hover-buttons">
+	        <td>
+	          <div class="history-box {{history.riskLevelId | dispositionColor}}"></div>
+	        </td>
+	        <td class="history-disposition">{{ history.riskLevel }}</td>
+	        <td class="history-date">{{history.createdTimestamp | date:'MMMM d, yyyy' }}</td>
+	        <td class="history-reasons"><span ng-repeat="reason in history.reasonCodes"><span ng-hide="reason.categoryId == history.reasonCodes[$index-1].categoryId">{{reason.categoryName}}<br/></span><span class="nested">{{reason.name}}<span ng-if="$index+1 != history.reasonCodes.length"> <br/></span></span></span></td>
+	        <td class="history-note"> {{ history.note }}</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+</apex:page>

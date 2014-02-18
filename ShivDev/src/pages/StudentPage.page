@@ -1,0 +1,9 @@
+<apex:page >
+<apex:form >
+<tabel style="margin-left:20%;margin-top:20%">
+<tr><td>Name</td><td><input name="Name" type="text"/></td></tr>
+</tabel>
+</apex:form>
+
+
+</apex:page>

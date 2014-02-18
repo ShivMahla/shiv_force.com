@@ -1,0 +1,1510 @@
+<!-- Copyright (c) 2012, 2013 All Rights Reserved
+//
+// This source is subject to the BigKite License granted to Skin Vitality, and only Skin Vitality.
+// All code is owned solely by BigKite and BigKite hereby grants
+// Skin Vitality a worldwide, perpetual, non-exclusive, non-transferable, royalty-free license to use and
+// modify such work product solely for its internal business purposes.
+// All other rights reserved. -->
+
+<apex:page showHeader="false"    standardStylesheets="true"  standardController="Opportunity" extensions="fullcalUserMasterTest" sidebar="false"  >
+ <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" /> 
+  <head>
+     <title> Appointment Calendar </title>
+
+ <apex:stylesheet value="{!$Page.CalenderMasterCSS}"/>
+ <style type="text/css">
+   
+  
+  .dhx_marked_timespan 
+  {
+   background:#C0C0C0 !important;
+  }
+  .dhx_cal_larea
+  {
+   width:800px  !important;
+  }
+  .dhx_cal_light_wide
+  {
+   width:810px !important;
+  }
+  
+ </style> 
+ <script type='text/javascript'>
+   var clinicName = '{!clinic}';
+   var  mincalenderClick  = false;
+   var  allCheckbox = false;
+   </script>
+</head>  
+     <title>Calendar</title>
+     <link rel="stylesheet" href="{!$Resource.JQueryCalenderCSS}" />
+     <script src="{!$Resource.JQueryCalenderJS}"></script>
+     <script src="{!$Resource.JQueryUICalenderJS}"></script>
+     <script src="{!$Resource.jQueryLibrary}" type="text/javascript"></script>   
+     <link rel="stylesheet" href="/resources/demos/style.css" /> 
+     <script src="{!$Resource.IETFDateConvertor}" type="text/javascript" charset="utf-8" ></script>
+     <script src="{!$Resource.dhtmlxscheduler}" type="text/javascript" charset="utf-8" ></script>
+     <script src="{!$Resource.dhtmlxscheduler_dhx_terrace}" type="text/javascript" charset="utf-8"></script>
+     <script src="{!$Resource.dhtmlxscheduler_units}" type="text/javascript" charset="utf-8"></script> 
+     <script src="{!URLFOR($Resource.CalendarSchedular, 'CalendarSchedular/codebase/ext/dhtmlxscheduler_tooltip.js')}" type="text/javascript" charset="utf-8"></script> 
+     <script src="{!URLFOR($Resource.CalendarSchedular, 'CalendarSchedular/codebase/ext/dhtmlxscheduler_minical.js')}" type="text/javascript" charset="utf-8"></script>
+     <LINK rel="stylesheet" media="screen" href="{!URLFOR($Resource.CalendarSchedular, 'CalendarSchedular/codebase/dhtmlxscheduler_dhx_terrace.css')}" type="text/css"/>
+     
+         <script type="text/javascript">
+      /*
+        This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+        to use it in non-GPL project. Please contact sales@dhtmlx.com for details
+        */
+        scheduler.config.limit_start = null;
+     scheduler.config.limit_end = null;
+     scheduler.config.limit_view = !1;
+     scheduler.config.check_limits = !0;
+     //scheduler.config.mark_now = !0;
+     scheduler.config.display_marked_timespans = !0;
+     (function () {
+         var u = null,
+             s = "dhx_time_block",
+             F = function (b, a, c) {
+                 a instanceof Date && c instanceof Date ? (b.start_date = a, b.end_date = c) : (b.days = a, b.zones = c);
+                 return b
+             }, E = function (b, a, c) {
+                 var d = typeof b == "object" ? b : {
+                     days: b
+                 };
+                 d.type = s;
+                 d.css = "";
+                 if (a) {
+                     if (c) d.sections = c;
+                     d = F(d, b, a)
+                 }
+                 return d
+             };
+         scheduler.blockTime = function (b, a, c) {
+             var d = E(b, a, c);
+             return scheduler.addMarkedTimespan(d)
+         };
+         scheduler.unblockTime = function (b, a, c) {
+             var a = a || "fullday",
+                 d = E(b, a, c);
+             return scheduler.deleteMarkedTimespan(d)
+         };
+         scheduler.attachEvent("onBeforeViewChange",
+
+         function (b, a, c, d) {
+             d = d || a;
+             c = c || b;
+             return scheduler.config.limit_view && (d.valueOf() > scheduler.config.limit_end.valueOf() || this.date.add(d, 1, c) <= scheduler.config.limit_start.valueOf()) ? (setTimeout(function () {
+                 scheduler.setCurrentView(scheduler._date, c)
+             }, 1), !1) : !0
+         });
+         var x = function (b, a, c) {
+             var d = c[a] && c[a][s] ? c[a][s] : c[b] && c[b][s] ? c[b][s] : [];
+             return d
+         }, t = function (b) {
+             if (!b) return !0;
+             if (!scheduler.config.check_limits) return !0;
+             for (var a = scheduler, c = a._mode, d = scheduler._marked_timespans, e = a.config, h = [], h = b.rec_type ? scheduler.getRecDates(b) : [b], g = !0, i = 0; i < h.length; i++) {
+                 var f = h[i];
+                 if (g = e.limit_start && e.limit_end ? f.start_date.valueOf() >= e.limit_start.valueOf() && f.end_date.valueOf() <= e.limit_end.valueOf() : !0) for (var j = new Date(f.start_date.valueOf()), p = scheduler.date.add(j, 1, "day"); j < f.end_date; j = scheduler.date.date_part(p), p = a.date.add(j, 1, "day")) {
+                     var n = +scheduler.date.date_part(new Date(j)),
+                         o = j.getDay(),
+                         k = [];
+                     if (a._props && a._props[c]) {
+                         var m = a._props[c],
+                             q = d[c];
+                         if (q && q[f[m.map_to]]) for (var r = q[f[m.map_to]], v = x(o,
+                         n, r), l = 0; l < v.length; l++) k = scheduler._add_timespan_zones(k, v[l].zones)
+                     }
+                     if (a.matrix && a.matrix[c]) {
+                         var s = a.matrix[c],
+                             t = d[c];
+                         if (t && t[f[s.y_property]]) for (var u = t[f[s.y_property]], A = x(o, n, u), l = 0; l < A.length; l++) k = scheduler._add_timespan_zones(k, A[l].zones)
+                     }
+                     for (var D = d.global, B = x(o, n, D), l = 0; l < B.length; l++) k = scheduler._add_timespan_zones(k, B[l].zones);
+                     var C = scheduler._get_zone_minutes(j),
+                         y = f.end_date > p || f.end_date.getDate() != j.getDate() ? 1440 : scheduler._get_zone_minutes(f.end_date);
+                     if (k) for (l = 0; l < k.length; l += 2) {
+                         var z = k[l],
+                             w = k[l + 1];
+                         if (z < y && w > C) {
+                             if (C <= w && C >= z) {
+                                 if (w == 1440 || y < w) {
+                                     g = !1;
+                                     break
+                                 }
+                                 if (f._timed && a._drag_id && a._drag_mode == "new-size") f.start_date.setHours(0), f.start_date.setMinutes(w);
+                                 else {
+                                     g = !1;
+                                     break
+                                 }
+                             }
+                             if (y >= z && y < w || C < z && y > w) if (f._timed && a._drag_id && a._drag_mode == "new-size") f.end_date.setHours(0), f.end_date.setMinutes(z);
+                             else {
+                                 g = !1;
+                                 break
+                             }
+                         }
+                     }
+                 }
+                 if (!g) a._drag_id = null, a._drag_mode = null, g = a.checkEvent("onLimitViolation") ? a.callEvent("onLimitViolation", [f.id, f]) : g
+             }
+             return g
+         };
+         scheduler.attachEvent("onMouseDown",
+
+         function (b) {
+             return !(b = s)
+         });
+         scheduler.attachEvent("onBeforeDrag", function (b) {
+             return !b ? !0 : t(scheduler.getEvent(b))
+         });
+         scheduler.attachEvent("onClick", function (b) {          
+             return t(scheduler.getEvent(b))
+         });
+         scheduler.attachEvent("onBeforeLightbox", function (b) {
+             var a = scheduler.getEvent(b);
+             u = [a.start_date, a.end_date];
+             return t(a)
+         });
+         scheduler.attachEvent("onEventSave", function (b, a) {
+             if( $("#inputLookupTreatmentName").val() == ""){
+                 alert('Please select treatment');
+                 var c = scheduler._lame_clone(a);
+                 scheduler._roll_back_dates(c)
+             }
+             if( $("#inputLookupPatientName").val() == ""){
+                 alert('Please select patient');
+                 var c = scheduler._lame_clone(a);
+                 scheduler._roll_back_dates(c)
+             }
+             if (a.rec_type) {
+                 var c = scheduler._lame_clone(a);
+                 scheduler._roll_back_dates(c)
+             }
+             return t(a)
+         });
+         scheduler.attachEvent("onEventAdded", function (b) {
+             
+             if (!b) return !0;
+             var a = scheduler.getEvent(b);
+             if (!t(a) && scheduler.config.limit_start && scheduler.config.limit_end) {
+                 if (a.start_date < scheduler.config.limit_start) a.start_date = new Date(scheduler.config.limit_start);
+                 if (a.start_date.valueOf() >= scheduler.config.limit_end.valueOf()) a.start_date = this.date.add(scheduler.config.limit_end, -1, "day");
+                 if (a.end_date < scheduler.config.limit_start) a.end_date = new Date(scheduler.config.limit_start);
+                 if (a.end_date.valueOf() >= scheduler.config.limit_end.valueOf()) a.end_date = this.date.add(scheduler.config.limit_end, -1, "day");
+                 if (a.start_date.valueOf() >= a.end_date.valueOf()) a.end_date = this.date.add(a.start_date, this.config.event_duration || this.config.time_step, "minute");
+                 a._timed = this.is_one_day_event(a)
+             }
+             return !0
+         });
+         scheduler.attachEvent("onEventChanged", function (b) {
+             if (!b) return !0;
+             var a = scheduler.getEvent(b);
+             if (!t(a)) {
+                 if (!u) return !1;
+                 a.start_date = u[0];
+                 a.end_date = u[1];
+                 a._timed = this.is_one_day_event(a)
+             }
+             return !0
+         });
+         scheduler.attachEvent("onBeforeEventChanged", function (b) {
+             return t(b)
+         });
+         scheduler.attachEvent("onBeforeEventCreated",
+
+         function (b) {
+             var a = scheduler.getActionData(b).date,
+                 c = {
+                     _timed: !0,
+                     start_date: a,
+                     end_date: scheduler.date.add(a, scheduler.config.time_step, "minute")
+                 };
+             return t(c)
+         });
+         scheduler.attachEvent("onViewChange", function () {
+             scheduler.markNow()
+         });
+         scheduler.attachEvent("onSchedulerResize", function () {
+             window.setTimeout(function () {
+                 scheduler.markNow()
+             }, 1);
+             return !0
+         });
+         scheduler.attachEvent("onTemplatesReady", function () {
+             scheduler._mark_now_timer = window.setInterval(function () {
+                 scheduler.markNow()
+             }, 6E4)
+         });
+         scheduler.markNow = function (b) {
+             var a =
+                 "dhx_now_time";
+             this._els[a] || (this._els[a] = []);
+             var c = scheduler.config.now_date || new Date,
+                 d = this.config;
+             scheduler._remove_mark_now();
+             if (!b && d.mark_now && c < this._max_date && c > this._min_date && c.getHours() >= d.first_hour && c.getHours() < d.last_hour) {
+                 var e = this.locate_holder_day(c);
+                 this._els[a] = scheduler._append_mark_now(e, c)
+             }
+         };
+         scheduler._append_mark_now = function (b, a) {
+             var c = "dhx_now_time",
+                 d = scheduler._get_zone_minutes(a),
+                 e = {
+                     zones: [d, d + 1],
+                     css: c,
+                     type: c
+                 };
+             if (this._table_view) {
+                 if (this._mode == "month") return e.days = +scheduler.date.date_part(a), scheduler._render_marked_timespan(e, null, null)
+             } else if (this._props && this._props[this._mode]) {
+                 for (var h = this._els.dhx_cal_data[0].childNodes, g = [], i = 0; i < h.length - 1; i++) {
+                     var f = b + i;
+                     e.days = f;
+                     var j = scheduler._render_marked_timespan(e, null, f)[0];
+                     g.push(j)
+                 }
+                 return g
+             } else return e.days = b, scheduler._render_marked_timespan(e, null, b)
+         };
+         scheduler._remove_mark_now = function () {
+             for (var b = "dhx_now_time", a = this._els[b], c = 0; c < a.length; c++) {
+                 var d = a[c],
+                     e = d.parentNode;
+                 e && e.removeChild(d)
+             }
+             this._els[b] = []
+         };
+         scheduler._marked_timespans = {
+             global: {}
+         };
+         scheduler._get_zone_minutes = function (b) {
+             return b.getHours() * 60 + b.getMinutes()
+         };
+         scheduler._prepare_timespan_options = function (b) {
+             var a = [],
+                 c = [];
+             if (b.days == "fullweek") b.days = [0, 1, 2, 3, 4, 5, 6];
+             if (b.days instanceof Array) {
+                 for (var d = b.days.slice(), e = 0; e < d.length; e++) {
+                     var h = scheduler._lame_clone(b);
+                     h.days = d[e];
+                     a.push.apply(a, scheduler._prepare_timespan_options(h))
+                 }
+                 return a
+             }
+             if (!b || !(b.start_date && b.end_date && b.end_date > b.start_date || b.days !== void 0 && b.zones)) return a;
+             var g = 0,
+                 i = 1440;
+             if (b.zones == "fullday") b.zones = [g, i];
+             if (b.zones && b.invert_zones) b.zones = scheduler.invertZones(b.zones);
+             b.id = scheduler.uid();
+             b.css = b.css || "";
+             b.type = b.type || "default";
+             var f = b.sections;
+             if (f) for (var j in f) {
+                 if (f.hasOwnProperty(j)) {
+                     var p = f[j];
+                     p instanceof Array || (p = [p]);
+                     for (e = 0; e < p.length; e++) {
+                         var n = scheduler._lame_copy({}, b);
+                         n.sections = {};
+                         n.sections[j] = p[e];
+                         c.push(n)
+                     }
+                 }
+             } else c.push(b);
+             for (var o = 0; o < c.length; o++) {
+                 var k = c[o],
+                     m = k.start_date,
+                     q = k.end_date;
+                 if (m && q) for (var r = scheduler.date.date_part(new Date(m)),
+                 v = scheduler.date.add(r, 1, "day"); r < q;) {
+                     n = scheduler._lame_copy({}, k);
+                     delete n.start_date;
+                     delete n.end_date;
+                     n.days = r.valueOf();
+                     var l = m > r ? scheduler._get_zone_minutes(m) : g,
+                         s = q > v || q.getDate() != r.getDate() ? i : scheduler._get_zone_minutes(q);
+                     n.zones = [l, s];
+                     a.push(n);
+                     r = v;
+                     v = scheduler.date.add(v, 1, "day")
+                 } else {
+                     if (k.days instanceof Date) k.days = scheduler.date.date_part(k.days).valueOf();
+                     k.zones = b.zones.slice();
+                     a.push(k)
+                 }
+             }
+             return a
+         };
+         scheduler._get_dates_by_index = function (b, a, c) {
+             for (var d = [], a = a || scheduler._min_date,
+             c = c || scheduler._max_date, e = a.getDay(), h = b - e >= 0 ? b - e : 7 - a.getDay() + b, g = scheduler.date.add(a, h, "day"); g < c; g = scheduler.date.add(g, 1, "week")) d.push(g);
+             return d
+         };
+         scheduler._get_css_classes_by_config = function (b) {
+             var a = [];
+             b.type == s && (a.push(s), b.css && a.push(s + "_reset"));
+             a.push("dhx_marked_timespan", b.css);
+             return a.join(" ")
+         };
+         scheduler._get_block_by_config = function (b) {
+             var a = document.createElement("DIV");
+             if (b.html) typeof b.html == "string" ? a.innerHTML = b.html : a.appendChild(b.html);
+             return a
+         };
+         scheduler._render_marked_timespan = function (b, a, c) {
+             var d = [],
+                 e = scheduler.config,
+                 h = this._min_date,
+                 g = this._max_date,
+                 i = !1;
+             if (!e.display_marked_timespans) return d;
+             if (!c && c !== 0) if (b.days < 7) c = b.days;
+             else {
+                 var f = new Date(b.days),
+                     i = +f;
+                 if (!(+g >= +f && +h <= +f)) return d;
+                 var j = f.getDay(),
+                     c = scheduler.config.start_on_monday ? j == 0 ? 6 : j - 1 : j
+             }
+             var p = b.zones,
+                 n = scheduler._get_css_classes_by_config(b);
+             if (scheduler._table_view && scheduler._mode == "month") {
+                 var o = [],
+                     k = [];
+                 if (a) o.push(a), k.push(c);
+                 else for (var k = i ? [i] : scheduler._get_dates_by_index(c), m = 0; m < k.length; m++) o.push(this._scales[k[m]]);
+                 for (m = 0; m < o.length; m++) for (var a = o[m], c = k[m], q = 0; q < p.length; q += 2) {
+                     var r = p[m],
+                         s = p[m + 1];
+                     if (s <= r) return [];
+                     var l = scheduler._get_block_by_config(b);
+                     l.className = n;
+                     var t = a.offsetHeight - 1,
+                         u = a.offsetWidth - 1,
+                         x = Math.floor((this._correct_shift(c, 1) - h.valueOf()) / (864E5 * this._cols.length)),
+                         A = this.locate_holder_day(c, !1) % this._cols.length,
+                         D = this._colsS[A],
+                         B = this._colsS.heights[x] + (this._colsS.height ? this.xy.month_scale_height + 2 : 2) - 1;
+                     l.style.top = B + "px";
+                     l.style.lineHeight = l.style.height = t + "px";
+                     l.style.left = D + Math.round(r / 1440 * u) + "px";
+                     l.style.width = Math.round((s - r) / 1440 * u) + "px";
+                     a.appendChild(l);
+                     d.push(l)
+                 }
+             } else {
+                 a = a ? a : scheduler.locate_holder(c);
+                 for (m = 0; m < p.length; m += 2) {
+                     r = Math.max(p[m], e.first_hour * 60);
+                     s = Math.min(p[m + 1], e.last_hour * 60);
+                     if (s <= r) return [];
+                     l = scheduler._get_block_by_config(b);
+                     l.className = n;
+                     l.style.top = Math.round((r * 6E4 - this.config.first_hour * 36E5) * this.config.hour_size_px / 36E5) % (this.config.hour_size_px * 24) + "px";
+                     l.style.lineHeight = l.style.height = Math.max(Math.round((s - r - 1) * 6E4 * this.config.hour_size_px / 36E5) % (this.config.hour_size_px * 24), 1) + "px";
+                     a.appendChild(l);
+                     d.push(l)
+                 }
+             }
+             return d
+         };
+         scheduler.markTimespan = function (b) {
+             var a = scheduler._prepare_timespan_options(b);
+             if (a.length) {
+                 for (var c = [], d = 0; d < a.length; d++) {
+                     var e = a[d],
+                         h = scheduler._render_marked_timespan(e, null, null);
+                     h.length && c.push.apply(c, h)
+                 }
+                 return c
+             }
+         };
+         scheduler.unmarkTimespan = function (b) {
+             if (b) for (var a = 0; a < b.length; a++) {
+                 var c = b[a];
+                 c.parentNode.removeChild(c)
+             }
+         };
+         scheduler._marked_timespans_ids = {};
+         scheduler.addMarkedTimespan = function (b) {
+         
+            try
+            {
+             var a = scheduler._prepare_timespan_options(b),
+                 c = "global";
+             if (a.length) {
+                 var d = a[0].id,
+                     e = scheduler._marked_timespans,
+                     h = scheduler._marked_timespans_ids;
+                 h[d] || (h[d] = []);
+                 for (var g = 0; g < a.length; g++) {
+                     var i = a[g],
+                         f = i.days,
+                         j = i.zones,
+                         p = i.css,
+                         n = i.sections,
+                         o = i.type;
+                     if (n) for (var k in n) {
+                         if (n.hasOwnProperty(k)) {
+                             e[k] || (e[k] = {});
+                             var m = n[k],
+                                 q = e[k];
+                             q[m] || (q[m] = {});
+                             q[m][f] || (q[m][f] = {});
+                             q[m][f][o] || (q[m][f][o] = []);
+                             var r = q[m][f][o];
+                             i._array = r;
+                             r.push(i);
+                             h[d].push(i)
+                         }
+                     } else e[c][f] || (e[c][f] = {}), e[c][f][o] || (e[c][f][o] = []), r = e[c][f][o], i._array = r, r.push(i), h[d].push(i)
+                 }
+                 return d
+             }
+             }
+             catch(err)
+             {
+              
+             }
+         };
+         scheduler._add_timespan_zones = function (b, a) {
+             var c = b.slice(),
+                 a = a.slice();
+             if (!c.length) return a;
+             for (var d = 0; d < c.length; d += 2) for (var e = c[d], h = c[d + 1], g = d + 2 == c.length, i = 0; i < a.length; i += 2) {
+                 var f = a[i],
+                     j = a[i + 1];
+                 if (j > h && f <= h || f < e && j >= e) c[d] = Math.min(e, f), c[d + 1] = Math.max(h, j), d -= 2;
+                 else {
+                     if (!g) continue;
+                     var p = e > f ? 0 : 2;
+                     c.splice(d + p, 0, f, j)
+                 }
+                 a.splice(i--, 2);
+                 break
+             }
+             return c
+         };
+         scheduler._subtract_timespan_zones = function (b, a) {
+             for (var c = b.slice(), d = 0; d < c.length; d += 2) for (var e = c[d], h = c[d + 1], g = 0; g < a.length; g += 2) {
+                 var i = a[g],
+                     f = a[g + 1];
+                 if (f > e && i < h) {
+                     var j = !1;
+                     e >= i && h <= f && c.splice(d, 2);
+                     e < i && (c.splice(d, 2, e, i), j = !0);
+                     h > f && c.splice(j ? d + 2 : d, j ? 0 : 2, f, h);
+                     d -= 2;
+                     break
+                 }
+             }
+             return c
+         };
+         scheduler.invertZones = function (b) {
+             return scheduler._subtract_timespan_zones([0, 1440], b.slice())
+         };
+         scheduler._delete_marked_timespan_by_id = function (b) {
+             var a = scheduler._marked_timespans_ids[b];
+             if (a) for (var c = 0; c < a.length; c++) for (var d = a[c], e = d._array, h = 0; h < e.length; h++) if (e[h] == d) {
+                 e.splice(h, 1);
+                 break
+             }
+         };
+         scheduler._delete_marked_timespan_by_config = function (b) {
+             var a = scheduler._marked_timespans,
+                 c = b.sections,
+                 d = b.days,
+                 e = b.type || "default",
+                 h = [];
+             if (c) for (var g in c) {
+                 if (c.hasOwnProperty(g) && a[g]) {
+                     var i = c[g];
+                     a[g][i] && a[g][i][d] && a[g][i][d][e] && (h = a[g][i][d][e])
+                 }
+             } else a.global[d] && a.global[d][e] && (h = a.global[d][e]);
+             for (var f = 0; f < h.length; f++) {
+                 var j = h[f],
+                     p = scheduler._subtract_timespan_zones(j.zones, b.zones);
+                 if (p.length) j.zones = p;
+                 else {
+                     h.splice(f, 1);
+                     f--;
+                     for (var n = scheduler._marked_timespans_ids[j.id], o = 0; o < n.length; o++) if (n[o] == j) {
+                         n.splice(o, 1);
+                         break
+                     }
+                 }
+             }
+         };
+         scheduler.deleteMarkedTimespan = function (b) {
+             if (!arguments.length) scheduler._marked_timespans = {
+                 global: {}
+             };
+             if (typeof b != "object") scheduler._delete_marked_timespan_by_id(b);
+             else for (var a = scheduler._prepare_timespan_options(b), c = 0; c < a.length; c++) {
+                 var d = a[c];
+                 scheduler._delete_marked_timespan_by_config(a[c])
+             }
+         };
+         scheduler._get_types_to_render = function (b, a) {
+             var c = b ? b : {}, d;
+             for (d in a || {}) a.hasOwnProperty(d) && (c[d] = a[d]);
+             return c
+         };
+         scheduler._get_configs_to_render = function (b) {
+             var a = [],
+                 c;
+             for (c in b) b.hasOwnProperty(c) && a.push.apply(a, b[c]);
+             return a
+         };
+         scheduler.attachEvent("onScaleAdd", function (b, a) {
+             if (!(scheduler._table_view && scheduler._mode != "month")) {
+                 var c = a.getDay(),
+                     d = a.valueOf(),
+                     e = this._mode,
+                     h = scheduler._marked_timespans,
+                     g = [];
+                 if (this._props && this._props[e]) {
+                     var i = this._props[e],
+                         f = i.options,
+                         j = (i.position || 0) + Math.floor((this._correct_shift(a.valueOf(), 1) - this._min_date.valueOf()) / 864E5),
+                         p = f[j],
+                         a = scheduler.date.date_part(new Date(this._date)),
+                         c = a.getDay(),
+                         d = a.valueOf();
+                     if (h[e] && h[e][p.key]) {
+                         var n = h[e][p.key],
+                             o = scheduler._get_types_to_render(n[c],
+                             n[d]);
+                         g.push.apply(g, scheduler._get_configs_to_render(o))
+                     }
+                 }
+                 var k = h.global,
+                     m = k[d] || k[c];
+                 g.push.apply(g, scheduler._get_configs_to_render(m));
+                 for (var q = 0; q < g.length; q++) scheduler._render_marked_timespan(g[q], b, a)
+             }
+         })
+     })();
+         </script>
+
+<body   onload="init();" onresize="modSchedHeight()" >  
+    <script>
+        function modSchedHeight(){
+            var headHeight = 80;
+            var sch = document.getElementById("scheduler_here");
+            sch.style.height = (parseInt(document.body.offsetHeight)-headHeight)+"px";
+            document.getElementById("resourcemultilist").style.maxHeight  = (parseInt(document.body.offsetHeight)-headHeight-90)+"px";
+        }
+    </script>
+    <apex:form id="formcalender" >
+    <apex:pageMessages id="errorMessage" />
+       <!--------------------------------------------------------------------------->
+        <apex:actionFunction name="selectedClinic" action="{!clinicChanged}" rerender="userList,resourceList,hoverNewTemplatePanel,blockingSections"   onComplete=" reloadCalender(); "  >
+                <apex:param name="clinicId" value=""  />
+                <apex:param name="startDate" value=""  assignTo="{!StartDateTime}" />
+                <apex:param name="endDate" value=""    assignTo="{!EndDateTime}" />
+        </apex:actionFunction>
+        <apex:actionFunction name="loadResourceSchedule" action="{!LoadResourceSchedule}" rerender="blockingSections"   onComplete=" $('#pagemask').css('display','none');"  >
+                <apex:param name="clinicId"     value=""    assignTo="{!clinic}" />
+                <apex:param name="startDate"    value=""    assignTo="{!StartDateTime}" />
+                <apex:param name="endDate"      value=""    assignTo="{!EndDateTime}" />
+                <apex:param name="CalendarDate" value="" />                
+        </apex:actionFunction>  
+        <apex:actionFunction name="changeAppointmentStage" action="{!changeStageOfAppointment}" 
+              onComplete="loadUserEvents();refetchOnClinicChange(); $('#pagemask').css('display','none')" 
+              rerender="errorMessage,userList,userListSelect, hoverNewTemplatePanel">
+              <apex:param name="appointmentId" value="" />
+              <apex:param name="stageName" value=""/>
+              <apex:param name="reason" value=""/>
+         </apex:actionFunction>
+         <!-- Action Function to save reason for reschedule -->
+         <apex:actionFunction name="saveRescheduleReason_actionFunction" action="{!updateRescheduleReason}" onComplete="reloadCalender(); $('#pagemask').css('display','none');fadeOutErrors();" rerender="errorMessage, saveRescheduleReason_actionFunction">
+            <apex:param name="eventId" value="" />
+            <apex:param name="startDateTime" value="" />
+            <apex:param name="endDateTime" value="" />
+            <apex:param name="appointmentResizeReason" value="" />
+            <apex:param name="ObjectName" value=""/>
+        </apex:actionFunction>
+        <apex:actionFunction name="insertNewEvent" action="{!SaveOpportunity }" onComplete="  scheduler.resetLightbox(); reloadCalender(); $('#pagemask').css('display','none')" rerender="errorMessage,blockingSections,alertPanel">
+        </apex:actionFunction>
+        
+        
+      <apex:inputText id="TreatmentName" value="{!TreatmentId}" style="display:none;" /> 
+      <apex:inputText id="PatientName" value="{!patientId}" style="display:none;" /> 
+      <apex:inputText styleClass="InputDisabled"   id="StartDateTime" value="{!StartDateTime}" style="display:none;"/>
+      <apex:inputText styleClass="InputDisabled"   id="EndDateTime" value="{!EndDateTime}" style="display:none;"/> 
+       
+      <apex:inputText styleClass="InputDisabled"   id="StartDateTimeEvent" value="{!StartDateTimeEvent}" style="display:none;"/>
+      <apex:inputText styleClass="InputDisabled"   id="EndDateTimeEvent" value="{!EndDateTimeEvent}" style="display:none;"/> 
+     
+      
+      <apex:inputText id="ResourceId" value="{!ResourceId}" style="display:none;" /> 
+      <apex:inputText id="AppointmentName" value="{!AppointmentName}" style="display:none;" /> 
+      <apex:inputText style="display:none;" id="AppoinmentIdList" value="{!AppoinmentIdList}"/>
+      <apex:inputText style="display:none;" id="StaffIdList" value="{!StaffIdList}"/>
+      <apex:inputText style="display:none;" id="ResourceIdList" value="{!ResourceIdList}"/>
+      <apex:inputText id="AppointmentSourceId" value="{!AppointmentSourceId}" style="display:none;" />       
+      <apex:inputText id="AppointmentReferelId" value="{!AppointmentReferelId}" style="display:none;" /> 
+      <apex:inputText id="opportunitySource" value="{!opportunitySource}" style="display:none;" />   
+      <apex:inputText id="clinicforSelectedResource" value="{!clinicforSelectedResource}" style="display:none;" />   
+
+      <input type="text" style="display:none;" id="startTime" value=""/>
+      <input type="text" style="display:none;" id="endTime" value=""/>
+     
+      
+    <table width="100%" height="100%" style="padding-top:10px; min-width:850px;overflow:scroll"> 
+        <tr>
+          <td colspan="3">
+                            <a    href="/apex/StaffCalendar"  class="button small white">Staff Calendar</a>
+                            <a    onclick="javascript:   window.location = '/apex/ResourceCalendar?clinicId='+clinicName + '&sDate=' + (new XDate( scheduler.getState().min_date)).toString('yyyy-MM-dd HH:mm:ss' )  + '&eDate=' + (new XDate( scheduler.getState().max_date)).toString('yyyy-MM-dd HH:mm:ss' )     "    class="button small white">Resource Calendar</a>
+                            <a    onclick="javascript:    window.location = '/apex/CalendarSchedular?clinicId='+clinicName  + '&sDate=' + (new XDate( scheduler.getState().min_date)).toString('yyyy-MM-dd HH:mm:ss' )  + '&eDate=' + (new XDate( scheduler.getState().max_date)).toString('yyyy-MM-dd HH:mm:ss' )    "   class="button small black">Appointment Calendar</a>                 
+                            <a    href="https:/home/home.jsp"  class="button small white"><b>Home</b></a>
+
+          </td>
+        </tr>  
+        <tr>
+            <td width="5%" style="vertical-align :top; padding-left:5px;padding-top:29px;">
+                       
+                        <b>  <apex:outputlabel value="Clinic : " for="clinicPickList" style="font-size:17px;color:#5e5349;"/> </b>
+                          <apex:selectList value="{!clinic}" size="1" id="clinicPickList" onchange="  refetchOnClinicChange();" style="width:150px;">
+                                <apex:selectOptions value="{!clinicnames}"/>
+                            </apex:selectList>
+                        
+                               
+                        <apex:outputPanel id="userList">
+                            <apex:panelGroup id="userListPanel"  rendered="{!clinic != null}">
+                                <div class="ui-user-list " id='appointmentTypeList' >
+                                <fieldset style="width: 110px;">
+                                <legend>
+                                    <input class="chkBox" type="checkbox" checked="checked" id="Appointment"  onchange="scheduler.clearAll(); if( jQuery(this).is(':checked') ){ jQuery('.Appointment').attr('checked', 'checked'); loadUserEvents(); }else{ jQuery('.Appointment').attr('checked', '') };jQuery('input[id$=\'AppoinmentIdList\']').val('EMPTY'); loadUserEvents();"  /><label for="Appointment">Select All</label>
+                                </legend>                                    
+                                    <apex:repeat value="{!AppointmentsType}" var="u" >
+                                        <div class="ui-user-item" id='AppointmentTypeItem' style="width:200px;height: 25px;">
+                                            <span style="margin-left:0px;" class="ui-user-item-body "  >
+                                                <input type="checkbox" id="check{!u.u.MasterLabel}" checked="checked"   alt="{!u.u.MasterLabel}" 
+                                                       class="user-selected Appointment chkBox "
+                                                       onchange="userCheckBoxChange(this,'{!u.u.MasterLabel}');" />
+                                                <label class="{!u.classname} boxlabel" for="check{!u.u.MasterLabel}" 
+                                                       style="background-color:{!u.backgroundcolor}; border:none; color:{!u.color}; font-family:Calibri, Arial, Verdana, sans-serif;" >
+                                                       {!u.u.MasterLabel}
+                                                </label>
+                                            </span>
+                                        </div>
+                                    </apex:repeat>
+                                </fieldset>    
+                                </div>
+                            </apex:panelGroup>
+                        </apex:outputPanel>
+                        
+                        <div class="ui-widget" style="margin-top:2em; font-family:Arial; display:none;" id='jsDebugLog'>js debug log :
+                            <div id="log" style="height: 300px; width: 220px; overflow: auto;" class="ui-widget-content"></div>
+                        </div>
+            </td>
+            <td  width="80%" valign="top" style="min-width:850px">
+                <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+                    <div class="dhx_cal_navline">
+                        <div class="dhx_cal_prev_button" id="dhx_cal_prev_button">&nbsp;</div>
+                        <div class="dhx_cal_next_button" id="dhx_cal_next_button">&nbsp;</div>
+                        <div class="dhx_cal_today_button" id="dhx_cal_today_button"></div>
+                        <div class="dhx_cal_date"></div>
+                        <div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+                        <div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+                        <div class="dhx_cal_tab" name="unit_tab" style="right:280px;"></div>
+                        <div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+                        <div style="left:33%;" class="dhx_minical_icon" id="dhx_minical_icon" onclick="show_minical()">&nbsp;</div> 
+                                               
+                    </div>
+                    <div class="dhx_cal_header">
+                    </div>
+                    <div class="dhx_cal_data" id="dhx_cal_data" oncomplete="test()">
+                    </div>  
+                </div>
+            </td>
+            <td width="9%" valign="top" style="padding-top:52px;max-width:170px">
+                       <!-- Resource CheckBox List -->                       
+                      
+                       
+                       
+                        <b>  <apex:outputlabel value="Resource List" for="clinicPickList" style="font-size:17px;color:#5e5349;"/> </b>
+                        <apex:outputPanel id="resourceList" >
+                        <script type="text/javascript" charset="utf-8">                        
+                           modSchedHeight();
+                            sections=
+                                    [
+                                        <apex:variable value="{!0}" var="cntResource"/>
+                                        <apex:variable value="{!resourceList.size}" var="maxResource"/>
+                                        <apex:repeat value="{!resourceList}" var="R">           
+                                                {key:'{!R.u.id}', label:"{! R.u.Name&'-'& LEFT(R.u.Clinic__r.Clinic_Code__c,2  )}"}
+                                            <apex:variable value="{!cntResource+1}" var="cntResource"/> 
+                                            <apex:variable value="sdf" var="sdf" rendered="{! cntResource != maxResource}" >,</apex:variable>
+                                        </apex:repeat> 
+                                    ];
+                             
+                            console.log(  scheduler.config.lightbox.sections);      
+                           
+                            scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:10, step:10});     
+                            scheduler.resetLightbox();
+                             scheduler.config.lightbox.sections=
+                            [    
+                                { name: "Treatment", height: 21, map_to: "Treatment", type: "template" },
+                                { name: "Patient", height: 21, map_to: "Patient", type: "template" },          
+                                { name:"custom", height:23, type:"select", options:sections, map_to:"section_id" },
+                                { name:"time", height:0, type:"time", map_to:"auto"}         
+                            ] 
+                            sectionsbkp =[];
+                            var resourceIds = ""; 
+                            <apex:repeat value="{!resourceList}" var="R">           
+                                resourceIds  = resourceIds  + "{!R.u.Id};";   
+                            </apex:repeat>  
+                            $("input[id$='ResourceIdList']").val(resourceIds   );
+                            $("input[id$='AppoinmentIdList']").val('Booked;Cancelled;Confirmed;No show;Arrived;Cashed out');
+                            
+                        </script>
+                       <div class="ui-user-list " id='uiResourceList'>
+                         <fieldset style="max-width:160px">
+                          <legend> <input class="chkBox" checked="checked" type="checkbox" id="Resource"  onchange="removeAllResource();" />
+                          <label for = "Resource">Select All</label></legend>
+                            <ul class="Multi" id="resourcemultilist" style="max-width:160px">
+                                <apex:repeat value="{!resourceList}" var="R">
+                                  <li>
+                                    <div class="ui-user-item" id='uiUserItem' style="overflow-x:hidden; height:23px; overflow-y:hidden; "> 
+                                        <span style="margin-left:0px" >
+                                            <input  checked="checked" type="checkbox" id="check{!R.u.id}" alt="{!R.u.id}"   class="user-selected Resource " onchange="userCheckBoxChange(this,'{!R.u.id}');" size ="1"/> 
+                                            <label class="{!R.classname} boxlabel" for="check{!R.u.id}"  >  
+                                                {! R.u.Name&'-'& LEFT(R.u.Clinic__r.Clinic_Code__c,2  )  }
+                                            </label>
+                                            <span style="visibility:hidden;" class="ui-icon ui-icon-gear" alt="Color" >Set Color</span>
+                                        </span>
+                                    </div>
+                                  </li>
+                                </apex:repeat>
+                              <!--   <apex:repeat value="{!resourceList}" var="R">
+                                  <li>
+                                    <div class="ui-user-item" id='uiUserItem' style="width:200px;overflow-x:hidden; height:23px; overflow-y:hidden; "> 
+                                        <span style="margin-left:0px" >
+                                            <input  checked="checked" type="checkbox" id="check{!R.u.id}" alt="{!R.u.id}"   class="user-selected Resource " onchange="userCheckBoxChange(this,'{!R.u.id}');" size ="1"/> 
+                                            <label class="{!R.classname} boxlabel" for="check{!R.u.id}"  >  
+                                                {! R.u.Name&'-'& LEFT(R.u.Clinic__r.Clinic_Code__c,2  )  }
+                                            </label>
+                                            <span style="visibility:hidden;" class="ui-icon ui-icon-gear" alt="Color" >Set Color</span>
+                                        </span>
+                                    </div>
+                                  </li>
+                                </apex:repeat> -->
+                                 
+                             </ul>
+                             </fieldset> 
+                            </div>       
+                        </apex:outputPanel>  
+            </td>
+        </tr>
+    </table>
+    
+    <!-- Div to save reason for cancellation-->
+    <div id="reasonDiv" style="display:none; opacity:0%; position:fixed; width:300px; height:300px; z-index:99999; background-color:#cdd0d8;">
+          <div id="reason" style="position:fixed;top:50%;left:50%;width:300px;height:100px;background-color:#f3f4f6;-moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;border-style:solid;border-color:#cdd0d8" >
+              <label style="color:#4A4A56; padding-left:10px; padding-top:10px;" for="reasonReschedule">Reason for Rescheduling</label><br/><apex:inputField style="width:150px; padding-left:10px;" id="reasonReschedule" value="{!oppty.Reason_For_Rescheduling__c}" />
+              <button class="button small" onclick="saveRescheduleReason();" style="position:absolute;bottom:10px;right:80px;" type="button">Ok</button>
+              <button class="button small" onclick="cancelReschedulePopUp();"  style="position:absolute;bottom:10px;right:10px;" type="button">Cancel</button>
+          </div>
+    </div>
+    <apex:outputPanel id="alertPanel" style="display:none">
+   
+    <script type="text/javascript" charset="utf-8">
+      if( '{!saveError}' == 'ERROR')
+      alert('An another appointment is booked on this time');
+     </script>
+    </apex:outputPanel>
+    <apex:outputPanel id="blockingSections" style="display:none">
+
+        <script type="text/javascript" charset="utf-8">          
+            <apex:repeat value="{!BlockingIntervels}" var="blocktime">                
+                scheduler.blockTime({days:new Date( {! YEAR( DATEVALUE(LEFT(blocktime,  FIND(';',blocktime,0)-1)) ) } ,{! MONTH(DATEVALUE(LEFT(blocktime,  FIND(';',blocktime,0)-1))) - 1 },{! DAY(DATEVALUE(LEFT(blocktime,  FIND(';',blocktime,0)-1))) },'0'), zones:[{!SUBSTITUTE( LEFT(blocktime,  FIND('!',blocktime,0)-1), LEFT(blocktime,  FIND(';',blocktime,0)),' ')}],invert_zones:false,css:"gray_section", sections:{unit:["{!RIGHT( blocktime, LEN(blocktime) -  FIND('!',blocktime,0))}"]}});  
+            </apex:repeat> 
+            scheduler.updateView();   
+            function updateBlockedIntervels()
+            {
+                    <apex:repeat value="{!BlockingIntervels}" var="blocktime">
+                           scheduler.unblockTime(new Date( {! YEAR( DATEVALUE(LEFT(blocktime,  FIND(';',blocktime,0)-1)) ) } ,{! MONTH(DATEVALUE(LEFT(blocktime,  FIND(';',blocktime,0)-1))) - 1 },{! DAY(DATEVALUE(LEFT(blocktime,  FIND(';',blocktime,0)-1))) },'0'),"fullday",{unit:["{!RIGHT( blocktime, LEN(blocktime) -  FIND('!',blocktime,0))}"]} ); 
+                    </apex:repeat> 
+                    scheduler.updateView();    
+            }
+            
+            
+        </script>
+    </apex:outputPanel>
+    <script type="text/javascript" charset="utf-8">
+        var startDateTime ;
+        var EndDateTime ;
+        var appointment_id;
+        var appointment_object_name ;  
+        var sections;
+        var todayDate =  new XDate('{!TODAY()}')   ;
+        function init()
+        {
+            window.resizeTo(950,700)
+            modSchedHeight();
+            var step = 10;
+            var format = scheduler.date.date_to_str("%h:%i %A");        
+            scheduler.config.hour_size_px=(60/step)*22;
+            scheduler.templates.hour_scale = function(date)
+            {
+                html="";
+                for (var i=0; i<60/step; i++){
+                    html+="<div style='height:21px;line-height:21px;'>"+format(date)+"</div>";
+                    date = scheduler.date.add(date,step,"minute");
+                }
+                return html;
+            }
+          
+            sections=
+                    [
+                        <apex:variable value="{!0}" var="cntResource"/>
+                        <apex:variable value="{!resourceList.size}" var="maxResource"/>
+                        <apex:repeat value="{!resourceList}" var="R">           
+                                {key:"{!R.u.id}", label:"{!R.u.Name&'-'& LEFT(R.u.Clinic__r.Clinic_Code__c,2  )}"}             
+                            <apex:variable value="{!cntResource+1}" var="cntResource"/> 
+                            <apex:variable value="sdf" var="sdf" rendered="{! cntResource != maxResource}" >,</apex:variable>
+                        </apex:repeat> 
+                    ];
+            var resourceIds = "";
+            <apex:repeat value="{!resourceList}" var="R">           
+                resourceIds  = resourceIds  + "{!R.u.Id};";   
+            </apex:repeat> 
+            resourcesClinic ={
+                               <apex:variable value="{!0}" var="cntResource"/>
+                               <apex:variable value="{!resourceList.size}" var="maxResource"/>
+                               <apex:repeat value="{!resourceList}" var="R">           
+                                 "{!R.u.id}" :"{!R.u.Clinic__r.id}" 
+                                <apex:variable value="{!cntResource+1}" var="cntResource"/> 
+                                <apex:variable value="sdf" var="sdf" rendered="{! cntResource != maxResource}" >,</apex:variable>
+                              </apex:repeat> 
+                            };     
+            $("input[id$='ResourceIdList']").val(resourceIds   );
+            $("input[id$='AppoinmentIdList']").val('Booked;Cancelled;Confirmed;No show;Arrived;Cashed out');
+            
+            sectionsbkp =[];
+            scheduler.config.first_hour = 0;
+            scheduler.config.last_hour = 24;
+            scheduler.config.scroll_hour = 8;
+            scheduler.config.separate_short_events = true;
+            scheduler.config.full_day = false;
+            scheduler.config.api_date = "%Y-%m-%d %h"; //Sets date format that will be used while specifying dates through API methods (format string variations). Used to parse incoming dates.
+            scheduler.config.xml_date="%Y-%m-%d %h:%i";//Sets the date format that is used while converting a string from an XML file into a date object
+            scheduler.config.repeat_date="%Y-%m-%d %h:%i %A";
+            scheduler.locale.labels.unit_tab = "Resources"
+            scheduler.locale.labels.section_custom="Resource";
+            scheduler.config.start_on_monday = false;
+            scheduler.locale.labels.section_Patient="Patient";
+            scheduler.locale.labels.section_Source="Source";
+            scheduler.locale.labels.section_Treatment = 'Treatment';
+            scheduler.config.multi_day = false;
+            scheduler.config.details_on_create=true;
+            scheduler.config.details_on_dblclick=true;
+            scheduler.config.icons_select=[ ];
+            scheduler.config.readonly =  false;
+            scheduler.config.lightbox.sections=
+            [    
+                { name: "Treatment", height: 21, map_to: "Treatment", type: "template" },
+                { name: "Patient", height: 21, map_to: "Patient", type: "template" },
+            /*  { name:"Source", height:21, type:"select", map_to:"leadsource", options:[ 
+                     {key:"NONE", label:"Select source"},
+                     {key:"10 Mistakes Booklet", label:"10 Mistakes Booklet"},
+                     {key:"Beautylicious", label:"Beautylicious"},
+                     {key:"Buytopia - Botox", label:"Buytopia - Botox"},
+                     {key:"Buytopia - Juvy", label:"Buytopia - Juvy"},
+                     {key:"Cambridge Times", label:"Cambridge Times"},
+                     {key:"City Life", label:"City Life"},
+                     {key:"City Scene", label:"City Scene"},
+                     {key:"Current Patient", label:"Current Patient"},
+                     {key:"Deal Find", label:"Deal Find"},
+                     {key:"Dr. Jugenburg", label:"Dr. Jugenburg"},
+                     {key:"Dr. Oz", label:"Dr. Oz"},
+                     {key:"Dr. Phil", label:"Dr. Phil"},
+                     {key:"eBlast Promo", label:"eBlast Promo"},
+                     {key:"Elevate", label:"Elevate"},
+                     {key:"Ellen", label:"Ellen"},
+                     {key:"Facebook Landing - 10 free units", label:"Facebook Landing - 10 free units"},
+                     {key:"Facebook Landing - 20 units for $110", label:"Facebook Landing - 20 units for $110"},
+                     {key:"Fashion Mag", label:"Fashion Mag"},
+                     {key:"Fashion with Flare", label:"Fashion with Flare"},
+                     {key:"Flare", label:"Flare"},
+                     {key:"Greater Toronto Living", label:"Greater Toronto Living"},
+                     {key:"Gift Cert", label:"Gift Cert"},
+                     {key:"Google", label:"Google"},
+                     {key:"Google Landing - 10 free units", label:"Google Landing - 10 free units"},
+                     {key:"Google Landing - 20 units for $110", label:"oogle Landing - 20 units for $110"},
+                     {key:"Groupon", label:"Groupon"},
+                     {key:"Groupon - Botox", label:"Groupon - Botox"},
+                     {key:"Groupon - Juvy", label:"Groupon - Juvy"},
+                     {key:"Groupon-ST", label:"Groupon-ST"},
+                     {key:"Groupon-Venus", label:"Groupon-Venus"},
+                     {key:"Home   Lifestyle", label:"Home   Lifestyle"},
+                     {key:"Home   Living", label:"Home   Living"},
+                     {key:"Home Digest", label:"Home Digest"},
+                     {key:"IP Mobile Sign", label:"IP Mobile Sign"},
+                     {key:"IP Workshop", label:"IP Workshop"},
+                     {key:"LinkedIn", label:"LinkedIn"},
+                     {key:"Live with Kelly!", label:"Live with Kelly!"},
+                     {key:"Livingsocial - Botox", label:"Livingsocial - Botox"},
+                     {key:"Livingsocial - Juvy", label:"Livingsocial - Juvy"},
+                     {key:"Male Sundays", label:"Male Sundays"},
+                     {key:"Mississauga News", label:"Mississauga News"},
+                     {key:"Money Saver", label:"Money Saver"},
+                     {key:"newsletter eblast", label:"newsletter eblast"},
+                     {key:"Open   Save", label:"Open   Save"},
+                     {key:"Oprah", label:"Oprah"},
+                     {key:"Online Store", label:"Online Store"},
+                     {key:"Other", label:"Other"},
+                     {key:"Patient Referral", label:"Patient Referral"},
+                     {key:"RDEALS", label:"RDEALS"},
+                     {key:"Real Estate eBlast", label:"Real Estate eBlast"},
+                     {key:"Referral", label:"Referral"},
+                     {key:"RH Injection Promo", label:"RH Injection Promo"},
+                     {key:"Rogers Text Blast", label:"Rogers Text Blast"},
+                     {key:"RSVP - Open House", label:"RSVP - Open House"},
+                     {key:"Salon", label:"Salon"},
+                     {key:"Shoppers Source", label:"Shoppers Source"},
+                     {key:"Signature Partners", label:"Signature Partners"},
+                     {key:"Summer Injection Promo 2012", label:"Summer Injection Promo 2012"},
+                     {key:"SMS/Text Camp.", label:"SMS/Text Camp."},
+                     {key:"Synergy", label:"Synergy"},
+                     {key:"Team Buy-BTX", label:"Team Buy-BTX"},
+                     {key:"Team Buy-Juvy", label:"Team Buy-Juvy"},
+                     {key:"Team Buy - LHR", label:"Team Buy - LHR"},
+                     {key:"Team Buy-Vela", label:"Team Buy-Vela"},
+                     {key:"Thank You Botox Package", label:"Thank You Botox Package"},
+                     {key:"Thank You Skin Tightening Package", label:"Thank You Skin Tightening Package"},
+                     {key:"The Record", label:"The Record"},
+                     {key:"Treasures", label:"Treasures"},
+                     {key:"Toronto Life ebLAST", label:"Toronto Life ebLAST"},
+                     {key:"Toronto Star", label:"Toronto Star"},
+                     {key:"Upgrade", label:"Upgrade"},
+                     {key:"VIP BotoxPackage", label:"VIP BotoxPackage"},
+                     {key:"VIP Skin Tightening Package", label:"VIP Skin Tightening Package"},
+                     {key:"Virtual Consultation", label:"Virtual Consultation"},
+                     {key:"Wag Jag – Venus", label:"Wag Jag – Venus"},
+                     {key:"Wag Jag-Botox", label:"Wag Jag-Botox"},
+                     {key:"Wag Jag-FF", label:"Wag Jag-FF"},
+                     {key:"Wag Jag-Juvy", label:"Wag Jag-Juvy"},
+                     {key:"Wag Jag-ST", label:"Wag Jag-ST"},
+                     {key:"Wag Jag - Peels", label:"Wag Jag - Peels"},
+                     {key:"Wag Jag-Vela", label:"Wag Jag-Vela"},
+                     {key:"Walk-In", label:"Walk-In"},
+                     {key:"Website", label:"Website"},
+                     {key:"Wonderlist Coupon", label:"Wonderlist Coupon"},
+                     {key:"Wonderlist -TO Star", label:"Wonderlist -TO Star"},
+                     {key:"Yellow Pages", label:"Yellow Pages"}]},*/
+                { name:"custom", height:23, type:"select", options:sections, map_to:"section_id" },
+                { name:"time", height:0, type:"time", map_to:"auto"}         
+            ]  
+        
+                scheduler.config.buttons_right=[];  
+                scheduler.templates.lightbox_header = function(start, end, event)
+                {
+                    return "<b>New Appointment</b>";
+                }
+                
+                scheduler.form_blocks.time.set_value=function(node,value,ev)
+                {   
+                    node.style.display= 'none'; 
+                    node.previousSibling.style.display= 'none';  
+                    scheduler.setLightboxSize();  
+                }
+       
+             /*   scheduler.form_blocks.select.set_value=function(node,value,ev){
+                  
+                    if( node.previousSibling.innerHTML == 'Resource' &&  scheduler.getState().mode == 'unit' ) 
+                    {
+                      node.firstChild.value=value ;
+                      node.firstChild.disabled = false;  
+                    }
+                    else
+                    if( node.previousSibling.innerHTML == 'Resource' &&  scheduler.getState().mode != 'unit' ) 
+                    {
+                      node.firstChild.value=value ;
+                      node.firstChild.disabled = false;  
+                    }
+                } */  
+                scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:5, step:2});  
+                scheduler.init('scheduler_here',null,"unit");
+        
+                var xsdate =  new XDate( scheduler.getState().min_date)   
+                var xedate =  new XDate( scheduler.getState().max_date)   
+             
+                $("#dhx_cal_data").scrollTop(1056);                
+                console.log('https:/apex/fullCaluserDataJsonMaster?clinicId=ALL&appIds=EMPTY;Booked;Cancelled;Confirmed;No%20show;Arrived;Cashed%20out&staffIds=EMPTY&resourceIds=EMPTY;'+resourceIds  +'&startDate='+xsdate.toString('yyyy-MM-dd HH:mm:ss' )+'&endDate='+xedate.toString('yyyy-MM-dd HH:mm:ss' ));
+                scheduler.load('https:/apex/fullCaluserDataJsonMaster?clinicId=ALL&appIds=EMPTY;Booked;Cancelled;Confirmed;No%20show;Arrived;Cashed%20out&staffIds=EMPTY&resourceIds=EMPTY;'+resourceIds  +'&startDate='+xsdate.toString('yyyy-MM-dd HH:mm:ss' )+'&endDate='+xedate.toString('yyyy-MM-dd HH:mm:ss' ),'json');
+     
+                scheduler.templates.tooltip_text = function(start,end,event) 
+                {
+                        var htmlText;             
+                        var xdate1 =  new XDate(  event.start_date )  
+                        var xdate2 =  new XDate(  event.end_date) 
+                        if(event.ObjectName == 'ResourceSchedule'){
+                             
+                            htmlText  = "<table cellspacing='0' cellpadding='0' border='0' class='detailList'>" +"<tbody>"
+                                              +" <tr><td class='labelCol'>Resource Name : &nbsp</td><td class='dataCol'>" + event.title + "</td></tr>"
+                                              +" <tr><td class='labelCol'>Staff Name : &nbsp</td><td class='dataCol'>" + event.description + "</td></tr>"
+                                              +" <tr><td class='labelCol'>Clinic : &nbsp</td><td class='dataCol'>" + event.clinic + "</td></tr>"
+                                              +" <tr><td class='labelCol'>Open Time : &nbsp</td><td class='dataCol'>" +    xdate1.toString('MM/dd/yy hh:mm TT' )   + "</td></tr>"
+                                              +" <tr><td class='labelCol last'>Close Time : &nbsp</td><td class='dataCol last'>" + xdate2.toString('MM/dd/yy hh:mm TT' ) + "</td></tr>" 
+                                            +"</tbody>"
+                                        +"</table>" 
+                        }
+                        else if(event.ObjectName == 'Appointment'){
+                            htmlText = " <table cellspacing='0' cellpadding='0' border='0'>"+
+                                                "<tbody>"+
+                                                    "<tr><td class='pbTitle'><h2 class='mainTitle'>Appointment Detail</h2></td></tr>"+
+                                                    "<tr>"+
+                                                        "<td>"+
+                                                            "<input style='background-color: #1796B0; color:#FFFFFF'  type='button' title='Edit' name='edit' value=' Edit ' onclick='javascript:navigateToEdit(this);' alt='"+event.id+"' />"+
+                                                            "<input style='background-color: #1796B0; color:#FFFFFF' type='button' type='button' title='Clone' name='clone' value=' Clone ' onclick='javascript:navigateToClone(this);' alt='"+event.id+"'/>"+
+                                                            "<input style='background-color: #1796B0; color:#FFFFFF' class='Booked"+event.stage+"'  type='button' title='Booked' name='Booked'  value='Booked' onclick='changeStage(this);' alt='"+event.id+"'/>"+
+                                                            "<input style='background-color: #1796B0; color:#FFFFFF' class='Confirmed"+event.stage+"'  type='button' title='Confirmed' name='Confirmed'  value='Confirmed' onclick='changeStage(this);' alt='"+event.id+"'/>"+
+                                                            "<input style='background-color: #1796B0; color:#FFFFFF' class='Arrived"+event.stage+"'   type='button' title='Arrived' name='Arrived'  value='Arrived' onclick='changeStage(this);' alt='"+event.id+"'/>"+
+                                                            "<input style='background-color: #1796B0; color:#FFFFFF' class='Out"+event.stage+"'  type='button' title='Cashed Out' name='Cashed Out'  value='Cashed Out' onclick='changeStage(this);' alt='"+event.id+"'/>"+
+                                                            "<input style='background-color: #1796B0; color:#FFFFFF' class='show"+event.stage+"'  type='button' title='No show' name='No show'  value='No show' onclick='changeStage(this);' alt='"+event.id+"'/>"+
+                                                            "<input style='background-color: #1796B0; color:#FFFFFF' class='Cancelled"+event.stage+"' type='button'  title='Cancelled' name='Cancelled'  value='Cancelled' onclick='changeStage(this);' alt='"+event.id+"'/>"+
+                                                        "</td>"+
+                                                    "</tr>"+
+                                                "</tbody>"+
+                                        "</table><br/>"+
+                                        "<table cellspacing='0' cellpadding='0' border='0' class='detailList'>"+
+                                            "<tbody>"+
+                                                "<tr><td class='labelCol'><b>Patient Name</b></td><td class='dataCol'>"+event.title+"</td></tr>"+ 
+                                                "<tr><td class='labelCol'><b>Clinic</b></td><td class='dataCol'>"+event.clinic+"</td></tr>"+
+                                                "<tr><td class='labelCol'><b>Treatment</b></td><td class='dataCol'>"+event.treatmentName+"</td></tr>"+
+                                                "<tr><td class='labelCol'><b>Resource</b></td><td class='dataCol'>"+event.resource+"</td></tr>"+
+                                                "<tr><td class='labelCol'><b>Staff</b></td><td class='dataCol'>"+event.Staff+"</td></tr>"+
+                                                "<tr><td class='labelCol'><b>Stage</b></td><td id='StageName'  class='dataCol'>"+event.stage+"</td></tr>"+
+                                                "<tr><td class='labelCol'><b>Start Time</b></td> <td class='dataCol'>"+ xdate1.toString('MM/dd/yy hh:mm TT' )+"</td></tr>"+
+                                                "<tr><td class='labelCol last'><b>End Time</b></td><td class='dataCol last'>"+ xdate2.toString('MM/dd/yy hh:mm TT' )+"</td></tr>"+
+                                            "</tbody>"+
+                                        "</table>"
+                        }
+                        return htmlText;
+                }; 
+                scheduler.attachEvent("onEventCreated", function(id, native_event) 
+                {       
+                        var ev = scheduler.getEvent(id);
+                        ev.Patient      = "<input id='inputLookupPatientName' type='text'></input><img src='https:/img/func_icons/util/lookup20.gif' class='imgLookup'  onclick=\"openLookupPopup( \'inputLookupPatientName\', \'{!$Component.PatientName}\' , \'patient\'      )\"></img> <span style='margin-left:20px' > <b> Source</b>   <input id='inputLookupAppSourceId' type='text'></input> <img src='https://c.cs10.visual.force.com/img/func_icons/util/lookup20.gif' class='imgLookup'  onclick=\"openLookupPopup( \'inputLookupAppSourceId\', \'{!$Component.AppointmentSourceId}\' , \'AppointmentSource\'      )\"></img> </span><span style='margin-left:20px;display:none' > <b>  Referral Card</b>   <input id='inputLookupAppointmentReferelId' type='text'></input> <img src='https://c.cs10.visual.force.com/img/func_icons/util/lookup20.gif' class='imgLookup'  onclick=\"openLookupPopup( \'inputLookupAppointmentReferelId\', \'{!$Component.AppointmentReferelId}\' , \'AppointmentReferel\'      )\"></img> </span>  "; // my_template is the value of the 'map_to' property
+                        ev.Treatment    = "<input id='inputLookupTreatmentName' type='text'></input><img src='https:/img/func_icons/util/lookup20.gif' class='imgLookup'  onclick=\"openLookupPopup( \'inputLookupTreatmentName\', \'{!$Component.TreatmentName}\',\'treatment\'    )\"></img>    <span  style='margin-left:20px'><b>Start Time</b></span> <input style='margin-left:16px' id='EventStartTime' value='"+ "" +"'  type='text'></input>  <span style='margin-left:20px'><b>End Time</b></span>    <input style='margin-left:25px' id='EventEndTime'   value='"+ ""    +"'  type='text'></input> "; // my_template is the value of the 'map_to' property
+                        ev.color = '#FCD116';
+                     
+                });
+                var schedulermode = '';
+                scheduler.attachEvent("onDblClick", function (event_id){
+                  return false;
+                });        
+                
+                scheduler.attachEvent("onClick", function (event_id, native_event_object){
+                 return false;
+                });
+
+                scheduler.attachEvent("onViewChange", function (mode , date)
+                {       
+                        
+                       
+                        if( mincalenderClick  )
+                        {
+                              
+                            updateBlockedIntervels();  
+                            $('#pagemask').css('display','block')
+                            var xsdate =  new XDate( scheduler.getState().min_date  )  
+                            $("#startTime").val( ( xsdate  ).toString('yyyy-MM-dd HH:mm:ss' ) );
+                            $("input[id$='StartDateTime']").val( ( xsdate  ).toString('yyyy-MM-dd HH:mm:ss' ) );
+
+                            var xedate =  new XDate( scheduler.getState().max_date);     
+                            $("#endTime").val( ( xedate  ).toString('yyyy-MM-dd HH:mm:ss'  ) ); 
+                            $("input[id$='EndDateTime']").val( ( xedate  ).toString('yyyy-MM-dd HH:mm:ss'  ) ); 
+
+                            var today =  new XDate( scheduler.getState(). date)  
+                            var clinicidd = $('select[id$="clinicPickList"]').val();  
+                            scheduler.clearAll(); 
+                            
+                            loadResourceSchedule( clinicidd , $("#startTime").val() , $("#endTime").val() , today.toString('yyyy-MM-dd HH:mm:ss'  )   );
+                            scheduler.load('https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+( xsdate  ).toString('yyyy-MM-dd HH:mm:ss'  )+'&endDate='+( xedate  ).toString('yyyy-MM-dd HH:mm:ss'  )  );
+                            console.log('https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+( xsdate  ).toString('yyyy-MM-dd HH:mm:ss'  )+'&endDate='+( xedate  ).toString('yyyy-MM-dd HH:mm:ss'  ) );
+                            mincalenderClick   = false;
+                        }
+                        else
+                        if(  schedulermode   !=  scheduler.getState().min_date   +   scheduler.getState().max_date.toString()  +  scheduler.getState().mode )                       
+                        {   updateBlockedIntervels();
+                            $('#pagemask').css('display','block');
+                            var xsdate =  new XDate( scheduler.getState().min_date  )  
+                            $("#startTime").val( ( xsdate  ).toString('yyyy-MM-dd HH:mm:ss' ) );
+                            $("input[id$='StartDateTime']").val( ( xsdate  ).toString('yyyy-mm-dd HH:mm:ss' ) ); 
+                            
+                            var xedate =  new XDate( scheduler.getState().max_date);     
+                            $("#endTime").val( ( xedate  ).toString('yyyy-MM-dd HH:mm:ss'  ) ); 
+                             
+                            $("input[id$='EndDateTime']").val( ( xedate  ).toString('yyyy-MM-dd HH:mm:ss'  ) ); 
+                            
+                            var today =  new XDate( scheduler.getState().date)                        
+                            $('#pagemask').css('display','none');
+                            var clinicidd = $('select[id$="clinicPickList"]').val();  
+                            scheduler.clearAll();
+                            console.log('https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+( xsdate  ).toString('yyyy-MM-dd HH:mm:ss'  )+'&endDate='+( xedate  ).toString('yyyy-MM-dd HH:mm:ss'  ) );
+                            scheduler.load('https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+( xsdate  ).toString('yyyy-MM-dd HH:mm:ss'  )+'&endDate='+( xedate  ).toString('yyyy-MM-dd HH:mm:ss'  )  );
+                            loadResourceSchedule( clinicidd , ( xsdate  ).toString('yyyy-MM-dd HH:mm:ss'  ) , ( xsdate  ).toString('yyyy-MM-dd HH:mm:ss'  ) , today.toString('yyyy-MM-dd HH:mm:ss'  )   );
+                            $('#pagemask').css('display','none');
+
+                       }
+                       schedulermode  =   scheduler.getState().min_date   +   scheduler.getState().max_date.toString()  +  scheduler.getState().mode
+  
+                }); 
+        
+                scheduler.attachEvent("onLightbox", function (event_id)
+                { 
+                    var xdate =  new XDate( scheduler.getEventStartDate( event_id));          
+                    document.getElementById('EventStartTime').value =   xdate.toString('MM/dd/yy hh:mm TT'); 
+                    xdate =  new XDate( scheduler.getEventEndDate( event_id));          
+                    document.getElementById('EventEndTime').value =     xdate.toString('MM/dd/yy hh:mm TT');       
+                });
+                
+                
+                scheduler.attachEvent("onBeforeEventChanged", function(event_object, native_event, is_new, unmodified_event){
+                  
+                    if( unmodified_event.section_id == event_object.section_id )
+                    return true;
+                    else
+                    return  false;
+                 });
+                
+                 
+       
+                scheduler.attachEvent("onEventSave",function(id,data,is_new_event)
+                {        
+                
+                    $('#pagemask').css('display','block')          
+                    document.getElementById(  '{!$Component.ResourceId}' ).value          =   data.section_id   
+                    var xdate =  new XDate( scheduler.getEventStartDate( id));          
+                    document.getElementById(  '{!$Component.StartDateTimeEvent}' ).value       =   xdate.toString('yyyy-MM-dd HH:mm:ss'); 
+                    xdate =  new XDate( scheduler.getEventEndDate( id )); 
+                    document.getElementById(  '{!$Component.EndDateTimeEvent}' ).value          =    xdate.toString('yyyy-MM-dd HH:mm:ss'); 
+                    document.getElementById(  '{!$Component.AppointmentName}' ).value     =   data.text  ;       
+                    document.getElementById(  '{!$Component.EndDateTime}' ).value         =    xdate.toString('yyyy-MM-dd HH:mm:ss'); 
+                    document.getElementById(  '{!$Component.AppointmentName}' ).value      =    data.text  ;
+                    document.getElementById(  '{!$Component.opportunitySource}' ).value    =   data.leadsource;        
+         
+                    if( clinicName  == 'ALL' )       
+                    {
+                       
+                        $('input[id$="clinicforSelectedResource"]').val(  resourcesClinic[data.section_id]  );
+                       
+                        insertNewEvent(); 
+                        
+                        return true;
+                    }
+                    else
+                    {
+                        insertNewEvent(); 
+                        return true;
+                    }
+                    if(   document.getElementById(  'inputLookupPatientName' ).value == '' ||  document.getElementById(  'inputLookupPatientName' ).value == null )
+                    { 
+                        alert( 'Enter patient name');
+                        $('#pagemask').css('display','none');
+                        return false;
+                    }
+                    if(   document.getElementById(  'inputLookupTreatmentName' ).value == '' ||  document.getElementById(  'inputLookupTreatmentName' ).value == null )
+                    {   alert( 'Enter treatment name');
+                        $('#pagemask').css('display','none');
+                        return false;
+                    } 
+                  
+                })
+        
+                scheduler.attachEvent("onEventChanged", function(event_id,event_object){
+                    jQuery("#reasonDiv").css("display","block");  
+                    var xdate =  new XDate(event_object.start_date); 
+                    startDateTime = xdate.toString('yyyy-MM-dd HH:mm:ss');
+                    xdate =  new XDate(event_object.end_date);     
+                    endDateTime = xdate.toString('yyyy-MM-dd HH:mm:ss');   
+                    appointment_id = event_id;
+                    appointment_object_name =  event_object.ObjectName;               
+ 
+                }); 
+          
+                scheduler.templates.event_text=function(start,end,event)
+                {
+             
+                    if( event.title == undefined  )
+                    event.title = '';
+              
+                    if( event.treatmentName == undefined  )
+                    event.treatmentName = '';
+                    
+                    if( event.Staff   == undefined  )
+                    event.Staff = '';             
+                    return  "<a href='"+ event.url+"'>" + event.title    + "</a>&nbsp;<br/>"+event.treatmentName + "<br/>&nbsp;"+  event.Staff 
+              
+                } 
+       
+         
+              
+        }
+    
+    
+        //To change stage of appointment
+        function changeStage( inputElement)
+        {   
+            $('#pagemask').css('display','block')
+            var stageName = jQuery(inputElement).attr('name');
+            var id = jQuery(inputElement).attr('alt'); 
+      
+            if(stageName != 'Cancelled')
+            {
+                changeAppointmentStage(id,stageName);
+            }
+            else
+            {
+                var Reason=prompt("Please enter the reason for cancellation");
+                if (Reason !=null)
+                {
+                    changeAppointmentStage(id,stageName,Reason);
+                }
+            }
+        }
+    
+        //To Navigate to edit window for appointment
+        function navigateToEdit( inputElement )
+        {
+            $('#pagemask').css('display','block')
+            var id = jQuery(inputElement).attr('alt'); 
+            window.location.href = "/"+id+"/e?retURL=" + window.location.href;
+        }
+    
+        //To Navigate to clone window for appointment
+        function navigateToClone( inputElement ){
+            $('#pagemask').css('display','block')
+            var id = jQuery(inputElement).attr('alt');
+            window.location = "https:/apex/AppointmentClone?Id="+id;
+        }
+    
+        //If user press cancel buttone on reason for rescheduling pop-up windoow
+        function cancelReschedulePopUp(){
+             $('#pagemask').css('display','block')
+            jQuery("#reasonDiv").css("display","none");    
+            scheduler.load('https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicName +'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("input[id$='startTime']").val()+'&endDate='+$("input[id$='endTime']").val()  );
+            $("select[id$='reasonReschedule']").val( $("select[id$='reasonReschedule'] option:first").val()                 );            
+            $('#pagemask').css('display','none')  
+        }
+    
+        //If user press save buttone on reason for rescheduling pop-up windoow
+        function saveRescheduleReason()
+        {
+           
+            appointmentRescheduleReason = $('select[id$="reasonReschedule"]').val();
+            if(appointmentRescheduleReason != ""){
+                 $('#pagemask').css('display','block')
+                saveRescheduleReason_actionFunction(appointment_id ,startDateTime, endDateTime,appointmentRescheduleReason,appointment_object_name);
+                 $("select[id$='reasonReschedule']").val( $("select[id$='reasonReschedule'] option:first").val()                 );
+                jQuery("#reasonDiv").css("display","none");
+            }
+            else{
+                alert("Please Select Reason for rescheduling"); 
+            }    
+        }
+    
+       
+    
+        function show_minical()
+        {
+            mincalenderClick = true;     
+            if (scheduler.isCalendarVisible())
+                scheduler.destroyCalendar();
+            else
+                scheduler.renderCalendar(
+                {   
+                    position:"dhx_minical_icon",
+                    date:scheduler._date,
+                    navigation:true,
+                    handler:function(date,calendar)
+                    {
+                        scheduler.setCurrentView(date);
+                        scheduler.destroyCalendar()
+                    }
+                });
+        } 
+    
+    
+         //Select all functionality for Resource
+        function removeAllResource()
+        {  
+           allCheckbox = true;
+            $('#pagemask').css('display','block')           
+            
+            setTimeout( function(){
+              $.each(jQuery('.Resource'), function(index, value) { 
+                      $(value).click();
+                   });
+                
+            var xsdate =  new XDate( scheduler.getState().min_date)   
+            var xedate =  new XDate( scheduler.getState().max_date)  
+            if( $("#Resource").attr('checked') )
+            {  
+               for (var prop in sectionsbkp ) {  sections.push( sectionsbkp [prop] )  }
+               sectionsbkp = [];
+            }
+            else
+            {   
+                for (var prop in sections) {  sectionsbkp.push( sections[prop] )  }
+                sections= []; 
+            } 
+            scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:5, step:2});  
+                 $('#pagemask').css('display','none') 
+             }, 5)
+           
+           
+             
+            allCheckbox = false;    
+        }  
+        function userCheckBoxChange(ele,userid)
+        { // filter in or out events with this user id
+          
+            
+          
+          
+            if( ! allCheckbox)            
+            {
+            $('#pagemask').css('display','block')
+            var clinicidd = $('select[id$="clinicPickList"]').val();      
+            scheduler.clearAll();  
+            if( (! $(ele).attr('checked') ) && $(ele).hasClass('Appointment') ){   $("input[id$='AppoinmentIdList']").val( $("input[id$='AppoinmentIdList']").val().split(';'+userid).join('').split(userid).join(''));           $('#Appointment').attr("checked","") ;    }
+            if( (! $(ele).attr('checked') ) && $(ele).hasClass('Staff') ){         $("input[id$='StaffIdList']").val( $("input[id$='StaffIdList']").val().split(';'+userid).join('').split(userid).join(''));                     $('#Staff').attr("checked","") ;    }
+            if( (! $(ele).attr('checked') ) &&  $(ele).hasClass('Resource') ){     $("input[id$='ResourceIdList']").val( $("input[id$='ResourceIdList']").val().split(';'+userid).join('').split(userid).join(''));               $('#Resource').attr("checked","") ;    };
+            if( (! $(ele).attr('checked') ) &&  $(ele).hasClass('Resource') )
+            {
+          
+                for (var prop in sections) {    if ( sections[prop].key == userid ) { sectionsbkp.push( sections[prop] ) ;   sections.splice(prop,1 ); }     }
+                scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:5, step:2});     
+         
+            }
+            if( ( $(ele).attr('checked') ) && $(ele).hasClass('Appointment') ){    $("input[id$='AppoinmentIdList']").val( $("input[id$='AppoinmentIdList']").val() + ';'+ userid   );            if(   $(".Appointment:checked").length == $(".Appointment").length   ) {  $('#Appointment').attr('checked', 'checked')    };    }
+            if( ( $(ele).attr('checked') ) && $(ele).hasClass('Staff') ){          $("input[id$='StaffIdList']").val( $("input[id$='StaffIdList']").val() + ';'+ userid   );                      if(   $(".Staff:checked").length == $(".Staff").length   ) {  $('#Staff').attr('checked', 'checked')    };    }
+            if( ( $(ele).attr('checked') ) && $(ele).hasClass('Resource') ){       $("input[id$='ResourceIdList']").val( $("input[id$='ResourceIdList']").val() + ';'+ userid   );                if(   $(".Resource:checked").length == $(".Resource").length   ) {  $('#Resource').attr('checked', 'checked')    };    }
+            if( ( $(ele).attr('checked') ) && $(ele).hasClass('Resource') )
+            {
+                for (var prop in sectionsbkp) {     if ( sectionsbkp[prop].key == userid ) { sections.push( sectionsbkp[prop] ) ;    sectionsbkp.splice(prop,1 ); }     }
+                scheduler.createUnitsView({ name:"unit",  property:"section_id", list:sections,skip_incorrect:true,size:5, step:2});     
+         
+            } 
+            var xsdate =  new XDate( scheduler.getState().min_date)   
+            var xedate =  new XDate( scheduler.getState().max_date)  
+            console.log('1https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+xsdate.toString('yyyy-MM-dd HH:mm:ss' )+'&endDate='+xedate.toString('yyyy-MM-dd HH:mm:ss' )  );
+            scheduler.load('https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+xsdate.toString('yyyy-MM-dd HH:mm:ss' )+'&endDate='+xedate.toString('yyyy-MM-dd HH:mm:ss' ) ,'json'  );
+            
+            $('#pagemask').css('display','none')
+            }
+        }  
+    
+        function refetchOnClinicChange()
+        {
+            $('#pagemask').css('display','block');
+            if(clinicName == 'ALL')
+            {
+                updateBlockedIntervelsforALL();      
+            } 
+            updateBlockedIntervels();
+            scheduler.clearAll();  
+            clinicName  = $('select[id$="clinicPickList"]').val();        
+            scheduler.clearAll();  
+            $('input[id$=\'ResourceIdList\']').val('EMPTY');
+            $('input[id$=\'StaffIdList\']').val('EMPTY'); 
+            $('input[id$=\'AppoinmentIdList\']').val('EMPTY'); 
+            var xsdate =  new XDate( scheduler.getState().min_date)  ;
+            var xedate =  new XDate( scheduler.getState().max_date) ;              
+            var clinicidd = $('select[id$="clinicPickList"]').val();              
+            selectedClinic(clinicName, xsdate.toString('yyyy-MM-dd HH:mm:ss'), xedate.toString('yyyy-MM-dd HH:mm:ss')  );    // call apex to select the group and reload the calendar 
+
+        } 
+    
+        function loadUserEvents() {
+            $('.Appointment').change();        
+        }
+    
+        function loadStaffEvents(){      
+            $('.Staff').change();
+        }
+        
+        function loadResourceEvents(){
+            $('.Resource').change();
+        } 
+        jQuery(document).ready(function() 
+        {
+            $('#pagemask').css('display','none')     
+        }); 
+        var newWin=null;
+        function openLookupPopup(name, id , page)
+        {
+            var resourceLookupId;
+            $(".dhx_cal_ltext").each(function () {if($(this).children(":first").is("select")){resourceLookupId=$(this).children(":first").val();}});
+            var url="/apex/LookupPopup?namefield=" + name + "&idfield=" + id + "&page=" + page+"&ResourceId="+resourceLookupId;
+            newWin=window.open(url, 'Popup','height=500,width=600,left=100,top=100,resizable=no,scrollbars=yes,toolbar=no,status=no');
+            if (window.focus) 
+            {
+                newWin.focus();
+            } 
+            return false;
+        }
+           
+        function closeLookupPopup()
+        {
+            if (null!=newWin)
+            {
+            newWin.close();
+            }  
+        } 
+            
+      
+       
+        $("#dhx_cal_today_button").click(function()
+        {
+            updateBlockedIntervelsforALL();
+            $('#pagemask').css('display','block');
+            $("#startTime").val( ( new XDate( new Date() )).toString('yyyy-MM-dd 00:00:00' )  );
+            $("#endTime").val(    ( ( new XDate( new Date() )).addDays(1)  ).toString('yyyy-MM-dd 00:00:00')  );             
+              
+          
+            
+            
+            var clinicidd = $('select[id$="clinicPickList"]').val();  
+            scheduler.clearAll();
+          //  loadResourceSchedule( clinicidd , $("#startTime").val() , $("#endTime").val() , todayDate.toString('yyyy-MM-dd HH:mm:ss'  )   );
+          //  scheduler.load('https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("input[id$='startTime']").val()+'&endDate='+$("input[id$='endTime']").val()  );
+     
+        })
+         
+        function  reloadCalender()
+        {
+             
+            var xdate =  new XDate( scheduler.getState().min_date)  
+            $("#startTime").val( xdate.toString('yyyy-MM-dd HH:mm:ss' ) );
+            xdate =  new XDate( scheduler.getState().max_date);     
+            $("#endTime").val( xdate.toString('yyyy-MM-dd HH:mm:ss' ) ); 
+            var clinicidd = $('select[id$="clinicPickList"]').val();  
+            scheduler.clearAll();
+            scheduler.load('https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("input[id$='startTime']").val()+'&endDate='+$("input[id$='endTime']").val()  );
+            console.log( 'https:/apex/fullCaluserDataJsonMaster?clinicId='+clinicidd+'&appIds='+ $("input[id$='AppoinmentIdList']").val()+'&staffIds='+ $("input[id$='StaffIdList']").val()+'&resourceIds='+ $("input[id$='ResourceIdList']").val()+'&startDate='+$("input[id$='startTime']").val()+'&endDate='+$("input[id$='endTime']").val()  );
+            $('#pagemask').css('display','none');
+         
+        }
+        function updateBlockedIntervelsforALL()
+        {
+            <apex:repeat value="{!resourceList}" var="R"> 
+                scheduler.unblockTime(new Date( {! YEAR( DATEVALUE(CalendarDate) ) } ,{! MONTH(DATEVALUE(CalendarDate)) - 1 },{! DAY(DATEVALUE(CalendarDate)) },'0'),"fullday",{unit:["{!R.u.id}"]} ); 
+            </apex:repeat> 
+            scheduler.updateView();
+        }
+
+</script>
+</apex:form>
+<div id="pagemask" style="background-color:#CCCCCC;; opacity:0.6; z-index:9999;display:none;position:fixed;top:0px;left:0px;width:100%;height:100%"><apex:image url="{!$Resource.Preloader}" style="position:fixed;top:45%;left:45%" /></div>
+</body>
+</apex:page>

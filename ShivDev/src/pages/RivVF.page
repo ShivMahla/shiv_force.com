@@ -1,0 +1,16 @@
+<apex:page sidebar="false" showHeader="false">
+
+    <apex:pageBlock title="A Block Title"> 
+        <apex:pageBlockSection Title="A section Title">
+             I m three component deep
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="B section Title">
+            This is another Section
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="User Detail">
+            {! $User.FirstName & ' ' & $User.LastName}<br/>
+            Today's Date : {! TODAY()}<br/>
+            {! if(DAY(TODAY())>14,'After the 14','Before or on the 14')}
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>

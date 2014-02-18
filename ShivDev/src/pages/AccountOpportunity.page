@@ -1,0 +1,14 @@
+<apex:page standardController="opportunity" extensions="AccountOpp" sidebar="false" showHeader="false">
+ <apex:messages />
+<apex:form >
+    <apex:pageBlock title="PageBlock">
+        <apex:pageBlockButtons ><apex:commandButton action="{!addError}" value="Add Error"/></apex:pageBlockButtons>
+        <apex:pageBlockSection title="PBSeciton">
+            <apex:pageBlockSectionItem >
+                <apex:inputField value="{! op.Amount}"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:form>
+</apex:page>

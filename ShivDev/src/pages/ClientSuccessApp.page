@@ -1,0 +1,31 @@
+<apex:page docType="html-5.0" showHeader="false" sidebar="false">
+<html lang="en" ng-app="ClientSuccess">
+  <head>
+    <meta charset="utf-8" />
+    <title>ClientSuccess</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- build:css styles/screen.min.css-->
+    <link rel="stylesheet" href="lib/nvd3/nv.d3.min.css" />
+    <link rel="stylesheet" href="styles/screen.css" />
+    <!-- endbuild-->
+    <script type="text/javascript" src="//use.typekit.net/mzm0svi.js"></script>
+    <script type="text/javascript">
+      try{Typekit.load();}catch(e){}
+      
+      
+    </script>
+  </head>
+  <body ng-controller="MainCtrl">
+    <!--include partials/header-->
+    <div ui-view="mainView"></div>
+    <flash-msg></flash-msg>
+    <script type="text/javascript">
+      (function() {
+          var s=document.createElement('script');s.type='text/javascript';
+          s.src='/csmapp/js/clientsuccess/track.js';
+          var t=document.getElementsByTagName('script')[0];t.parentNode.insertBefore(s,t);
+      })();
+    </script>
+  </body>
+</html>
+</apex:page>

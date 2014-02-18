@@ -1,0 +1,82 @@
+<!-- Copyright (c) 2012, 2013 All Rights Reserved
+//
+// This source is subject to the BigKite License granted to Skin Vitality, and only Skin Vitality.
+// All code is owned solely by BigKite and BigKite hereby grants
+// Skin Vitality a worldwide, perpetual, non-exclusive, non-transferable, royalty-free license to use and
+// modify such work product solely for its internal business purposes.
+// All other rights reserved. -->
+
+<apex:page contentType="text/plain" controller="fullcalUserMasterTest" action="{!LoadAltogether}">      
+<apex:variable value="{!0}" var="cntResource"/>
+<apex:variable value="{!ResourceWrapperList.size}" var="maxResource"/>
+
+<apex:variable value="{!0}" var="cntAppoinmen"/>
+<apex:variable value="{!AppoinmentWrapperList.size}" var="maxAppoinmen"/>
+
+<apex:variable value="{!0}" var="cntStaff"/>
+<apex:variable value="{!StafftWrapperList.size}" var="maxStaff"/>
+
+[ 
+
+ <apex:repeat value="{!AppoinmentWrapperList}" var="ev" >{
+        "id": "{!ev.Id}",
+        "start_date":"{!ev.startISO}",
+        "end_date":"{!ev.endISO}",
+        "section_id":"{!ev.resourceId}",
+        "ownerid":"{!ev.ownerid}",
+        "ownerName":"{!ev.ownerName}",
+        "clinic":"{!ev.clinic}",
+        "Staff":"{!ev.staff}",
+        "resource":"{!ev.resource}",
+        "resourceId":"{!ev.resourceId}",
+        "treatmentName":"{!ev.TreatmentName}",
+        "title":"{!ev.title}",
+        "type":"{!ev.eventType}",
+        "stage":"{!ev.appoinmentStage }",
+        "color":"{!ev.classname}",
+        "allDay":{!ev.allDayEvent},
+        "vis":{!ev.visible},
+        "start":"{!ev.startISO}",
+        "end":"{!ev.endISO}",
+        "url":"{!ev.url}",
+        "who":"{!ev.whoName}",
+        "what":"{!ev.whatName}", 
+        "description":"{!ev.description}",
+        "textColor":"black",
+        "ObjectName":"{!ev.ObjectName}",
+        "editable": {!ev.editable}
+}<apex:variable value="{!cntAppoinmen+1}" var="cntAppoinmen"/> 
+<apex:variable value="sdf" var="sdf" rendered="{! cntAppoinmen != maxAppoinmen}" >,</apex:variable> 
+</apex:repeat>
+
+<apex:outputText rendered="{! StafftWrapperList.size > 0 && ((cntAppoinmen != 0) ||cntResource != 0 ) }">,</apex:outputText>
+<apex:repeat value="{!StafftWrapperList}" var="ev" >{
+        "id": "{!ev.Id}",
+        "start_date":"{!ev.startISO}",
+        "end_date":"{!ev.endISO}",
+        "ownerid":"{!ev.ownerid}",
+        "ownerName":"{!ev.ownerName}",
+        "title":"{!ev.title}",
+        "type":"{!ev.eventType}",
+        "resource":"{!ev.resource}",
+        "clinic":"{!ev.clinic}",
+        "allDay":{!ev.allDayEvent},
+        "vis":{!ev.visible},
+        "start":"{!ev.startISO}",
+        "end":"{!ev.endISO}",
+        "url":"{!ev.url}",
+        "who":"{!ev.whoName}",
+        "what":"{!ev.whatName}", 
+        "description":"{!ev.description}",
+        "className": "{!ev.className}",
+        "ObjectName":"{!ev.ObjectName}",
+        "editable": {!ev.editable}
+}<apex:variable value="{!cntStaff+1}" var="cntStaff"/> 
+<apex:variable value="sdf" var="sdf" rendered="{! cntStaff != maxStaff}" >,</apex:variable> 
+</apex:repeat>
+
+
+
+]
+
+</apex:page>

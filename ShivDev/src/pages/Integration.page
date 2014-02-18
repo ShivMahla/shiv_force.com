@@ -1,0 +1,12 @@
+<apex:page controller="FBIntegration" showHeader="false" sidebar="false" >
+	<apex:image URL="{! $Resource.Facebook}" style="width:200px; height:100px" />
+	<apex:form >
+	<script>
+	    function openWindow()
+	    {
+		   window.location = '{! baseLink}';
+	    }
+   </script>
+   <button type="button" onclick="openWindow();">Google Login</button>
+	</apex:form>
+</apex:page>

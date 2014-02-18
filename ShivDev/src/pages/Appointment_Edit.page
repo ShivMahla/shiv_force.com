@@ -1,0 +1,71 @@
+<!-- Copyright (c) 2012, 2013 All Rights Reserved
+//
+// This source is subject to the BigKite License granted to Skin Vitality, and only Skin Vitality.
+// All code is owned solely by BigKite and BigKite hereby grants
+// Skin Vitality a worldwide, perpetual, non-exclusive, non-transferable, royalty-free license to use and
+// modify such work product solely for its internal business purposes.
+// All other rights reserved. -->
+
+<!--Visualforce page for new and edit appointment| Durgesh Choubey | KVP Business Solution-->
+<apex:page StandardController="Opportunity" tabStyle="case" standardStylesheets="True" extensions="OppClosedate">
+<apex:sectionHeader title="{!opportunity.name}"/>
+  <apex:form >
+  <apex:pageMessages />
+  <apex:pageBlock Title="Appointment Edit" id="app" > 
+  <apex:pageBlockButtons >
+  <apex:commandButton action="{!Save}" value="Save" /> 
+  <!--<apex:commandButton action="{!Savenew}" value="Save & New"/>--> 
+  <apex:commandButton action="{!Cancel}" value="Cancel"/>
+  </apex:pageBlockButtons>            
+            <apex:pageblocksection columns="2" title="Appointment Information" id="app">  
+            
+            <apex:inputField value="{!opportunity.Patient_Name__c}"/>                  <apex:inputField value="{!opportunity.LeadSource}"/>          
+            <apex:inputField value="{!opportunity.Clinic__c}"/>                        <apex:inputField value="{!opportunity.Referral_Card_Id1__c}"/>   
+            <apex:inputField value="{!opportunity.AccountId}"/>                        <apex:inputField value="{!opportunity.CampaignId}"/>
+            <apex:inputField value="{!opportunity.Appointment_Start_Date_Time__c}" onchange="setEndTime();"/>   <apex:inputField required="True" value="{!opportunity.Type}"/>
+              <apex:inputField value="{!opportunity.Appointment_End_Date_Time1__c}"/>  <apex:inputField value="{!opportunity.StageName}"/>  
+           
+         </apex:pageblocksection> 
+        <apex:pageBlockSection columns="2" title="Treatment Pitch Informations" >
+            <apex:inputField value="{!opportunity.Treatment_Name__c}"/>
+             <apex:inputField value="{!opportunity.Resource__c}"/>             
+            <apex:inputField value="{!opportunity.Treatment_Complete__c}"/>
+            <apex:inputField value="{!opportunity.New_Appointment__c}"/> 
+           
+        </apex:pageBlockSection>             
+        
+       <apex:pageBlockSection columns="2" title="Appointment Other Information" >
+            <apex:OutputField value="{!opportunity.Follow_Up_Date__c}"/>             
+            <apex:inputField value="{!opportunity.Cancellation_Reasons__c}"/>
+            <apex:OutputField value="{!opportunity.Appointment_Follow_Up_Date__c}"/>
+            <apex:inputField value="{!opportunity.Reason_For_Rescheduling__c }"/>
+        </apex:pageBlockSection> 
+        <apex:pageBlockSection columns="2" title="Wagjag Details" >
+            <apex:inputField value="{!opportunity.Associated_Wagjag_ID__c}"/>
+            <apex:inputField value="{!opportunity.Wagjag_Id_Used__c}"/>
+            <apex:inputField value="{!opportunity.Expiry_Date__c}"/>
+            <apex:inputField value="{!opportunity.Redeemed_Date_Time__c}"/>
+             <apex:inputField value="{!opportunity.Total_Purchase__c}"/>
+             <apex:inputField value="{!opportunity.Description__c}"/>
+            <apex:inputField value="{!opportunity.Discount__c}"/>
+            <apex:inputField value="{!opportunity.Quantity__c}"/>
+            <apex:inputField value="{!opportunity.Services__c}"/>
+            <apex:inputField value="{!opportunity.IsActive__c}"/>
+            <apex:inputField value="{!opportunity.Unlimited__c}"/>
+            <apex:inputField value="{!opportunity.Override__c}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="2" title="Webcam" >
+            <apex:inputField value="{!opportunity.Webcam_Required__c}"/>  
+            <apex:inputField value="{!opportunity.Webcam_Type__c}"/> 
+        </apex:pageBlockSection>
+    </apex:pageblock>  
+</apex:form>  
+<script type="text/javascript">
+/*function setEndTime(){
+   var dateTime = new Date();
+    dateTime = document.getElementById('j_id0:j_id2:app:app:j_id39').value ;
+     document.getElementById('j_id0:j_id2:app:app:j_id41').value = dateTime; 
+}*/
+
+</script>
+</apex:page>

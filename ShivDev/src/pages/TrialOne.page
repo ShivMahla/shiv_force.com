@@ -1,0 +1,9 @@
+<apex:page standardController="TrialOne__c" >
+<apex:form >
+<table>
+    <tr><td><apex:outputText >Name </apex:outputText></td><td><apex:inputField id="Name" value="{!TrialOne__c.Name}"/></td></tr>
+    <tr><td><apex:outputText >Is It Working</apex:outputText></td><td><apex:inputField id="is_it_working" value="{!TrialOne__c.is_it_working__c}"/></td></tr>
+    <tr><td></td><td><apex:commandButton value="Save"/></td></tr>
+</table>
+</apex:form>
+</apex:page>

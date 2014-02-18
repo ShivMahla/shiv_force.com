@@ -1,0 +1,89 @@
+<apex:page >
+
+<div class="disposition-widget">     
+  <div class="disposition">
+    <div class="head">
+      <div class="title disposition-title">Disposition</div>
+    </div>
+    <div class="body">
+      <div class="risk-bars-wrapper">
+        <div ng-if="DWidget.newDispositionActive" class="selector {{DWidget.activeDisposition.$code.id | dispositionColor}}">
+          <div class="title">{{DWidget.activeDisposition.$code.name}}
+            <p ng-click="DWidget.cancelDispositionActive()" class="close">X</p>
+          </div>
+          <ul>
+            <li>
+              <div class="select-label">Because:</div>
+              <select ui-select2="ui-select2" ng-model="DWidget.newDisposition.firstreason" placeholder="-- Primary Reason --" class="span-10">
+                <option value=""></option>
+                <optgroup label="{{category.name}}" ng-repeat="category in DWidget.data.reasonCodes">
+                  <option value="{{reasoncode}}" ng-repeat="reasoncode in category.reasonCodes">{{reasoncode.name}}</option>
+                </optgroup>
+              </select>
+            </li>
+            <li ng-show="DWidget.newDisposition.firstreason"><a ng-hide="addSecondReason" ng-click="addSecondReason=true">+ Add Secondary Reason</a>
+              <div ng-show="addSecondReason">
+                <select ui-select2="ui-select2" ng-model="DWidget.newDisposition.secondreason" placeholder="-- Secondary Reason --" class="span-10">
+                  <option value=""></option>
+                  <optgroup label="{{category.name}}" ng-repeat="category in DWidget.data.reasonCodes">
+                    <option value="{{reasoncode}}" ng-repeat="reasoncode in category.reasonCodes">{{reasoncode.name}}</option>
+                  </optgroup>
+                </select>
+              </div>
+            </li>
+            <li ng-show="DWidget.newDisposition.secondreason"><a ng-hide="addThirdReason" ng-click="addThirdReason=true">+ Add Tertiary Reason</a>
+              <div ng-show="addThirdReason">
+                <select ui-select2="ui-select2" ng-model="DWidget.newDisposition.thirdreason" placeholder="-- Tertiary Reason --" class="span-10">
+                  <option value=""></option>
+                  <optgroup label="{{category.name}}" ng-repeat="category in DWidget.data.reasonCodes">
+                    <option value="{{reasoncode}}" ng-repeat="reasoncode in category.reasonCodes">{{reasoncode.name}}</option>
+                  </optgroup>
+                </select>
+              </div>
+            </li>
+            <li>
+              <div class="notes-label">Notes &amp; Next Steps:</div>
+              <textarea ng-model="DWidget.newDisposition.notes" maxlength="255" class="span-10"></textarea>
+            </li>
+            <li class="save-btn">
+              <button ng-click="DWidget.saveDisposition($event)" class="btn btn-primary">SAVE</button>
+            </li>
+          </ul>
+          <div ng-class="DWidget.activeDisposition.$code.id == 1 ? 'arrow-bottom-last' : 'arrow-bottom'" class="arrow-bottom"></div>
+        </div>
+        <ul class="risk-bars">
+          <li disposition="disposition" ng-repeat="code in DWidget.data.codes | orderBy:'score':false" ng-click="DWidget.showDispositionActive(code)">
+            <div tooltip="tooltip" tooltip-content="{{ code.name }}" tooltip-class="bottom">
+              <div ng-class="{active:DWidget.activeDisposition.$code.id==code.id}" class="risk-bar {{code.id | dispositionColor }}"></div>
+            </div>
+          </li>
+        </ul>
+      </div><br/><span class="arrow-container">
+        <div class="arrow-top {{DWidget.activeDisposition.$color}}"></div></span>
+      <div class="risk-colored-hr">
+        <hr class="{{DWidget.activeDisposition.$color}}"/>
+      </div>
+      <div class="disposition-details">
+        <p class="disposition-status {{DWidget.activeDisposition.$color}}"><strong>{{DWidget.activeDisposition.riskLevel | uppercase}} </strong><span>FOR THE PAST </span><strong ng-if="DWidget.activeDisposition.numberOfDaysAtThisPosition != 1">{{DWidget.activeDisposition.numberOfDaysAtThisPosition | uppercase}}</strong><span ng-if="DWidget.activeDisposition.numberOfDaysAtThisPosition != 1">DAYS</span><span ng-if="DWidget.activeDisposition.numberOfDaysAtThisPosition == 1">DAY</span></p>
+        <ul class="risk-reasons">
+          <li ng-repeat="reasonCode in DWidget.activeDisposition.reasonCodes"> <strong>{{$index + 1}}. </strong><span>{{reasonCode.categoryName}} - {{reasonCode.name}}  </span></li>
+        </ul>
+      </div>
+      <hr/>
+      <div class="graphic-wrapper">
+        <div class="graphic">
+          <ul>
+            <li style="right:{{$index*8}}px;" ng-repeat="history in DWidget.data.history | orderBy: 'id':true | limitTo:23 " class="{{history.riskLevelId | dispositionColor}}"></li>
+          </ul>
+          <div ng-repeat="history in DWidget.data.history | orderBy: 'id':true | limitTo:1 " class="days {{history.riskLevelId | dispositionColor}}">
+            <div class="days-count">{{history.numberOfDaysAtThisPosition}}</div>
+            <div ng-pluralize="ng-pluralize" count="history.numberOfDaysAtThisPosition" when="{'0': 'days','1':'day','other':'days'}" class="days-description"></div>
+          </div>
+        </div>
+      </div>
+      <div class="history"><a ng-click="DWidget.openModal()" class="hist-link">History</a></div>
+    </div>
+  </div>
+  <modal ng-if="DWidget.modal.show" template="https://c.ap1.visual.force.com/apex/DThistoryModal" show="DWidget.modal.show" modaldata="DWidget.modal.data" max-width="900px" min-width="700px"></modal>
+</div>
+</apex:page>

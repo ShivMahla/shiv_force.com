@@ -1,0 +1,371 @@
+<apex:page id="ProfilePermissionManagement" controller="ProfilePermissionManagement" standardStylesheets="false">
+
+<apex:includeScript value="{!URLFOR($Resource.DataTable, '/DataTables-1.9.4/media/js/jquery.js')}"/>
+<apex:includeScript value="{! URLFOR($Resource.DataTable, '/DataTables-1.9.4/media/js/jquery.dataTables.js')}"/>
+        <apex:stylesheet value="{! URLFOR($Resource.DataTable, '/DataTables-1.9.4/examples/examples_support/themes/smoothness/jquery-ui-1.8.4.custom.css')}"/>
+        <apex:stylesheet value="{! URLFOR($Resource.DataTable, '/DataTables-1.9.4/media/css/jquery.dataTables_themeroller.css')}"/>
+
+
+<!--
+
+<script>   
+profilePagination = (Profile) new CustomSetController('select id, name from profile');
+pr = profilePagination.getFirstPage();
+
+    var checkProfileBoxesArray = Array();
+    var checkUserBoxesArray = Array();
+    var indexA = 0;
+    var indexB = 0;
+    
+    function addServiceToArray(checkboxId) {
+        checkProfileBoxesArray[indexA] = checkboxId;
+        indexA = indexA + 1;
+    }
+    
+    function addUserToArray(checkboxId) {
+        checkUserBoxesArray[indexB] = checkboxId;
+        indexB = indexB + 1;
+    }
+    
+    function selectOrDeselectAll(checkboxId, whichArray) {
+        //alert(checkBoxesOpportunityProductsArray.length);
+        var mainElement = document.getElementById(checkboxId);
+        var element;
+        var thisArray = Array();
+        if (whichArray == 'Profile')
+            thisArray = checkProfileBoxesArray;
+        else if (whichArray == 'User')
+            thisArray = checkUserBoxesArray;
+            
+        if (mainElement.checked == true) {
+            for (i = 0; i < thisArray.length; i++) {
+                element = document.getElementById(thisArray[i]);
+                element.checked = true;
+            }
+        }
+        else {
+            for (i = 0; i < thisArray.length; i++) {
+                element = document.getElementById(thisArray[i]);
+                element.checked = false;
+            }
+        }
+    }
+</script>
+-->
+<head>
+<style>
+     .brandTertiaryBgr 
+     {
+         background-color:#0c2053!important;
+     }
+     
+
+     
+     
+     .tableClass{
+         height: 300px !important;
+     }
+     
+     .odd {
+         background-color:#a8ddf0;
+     }
+     
+     .heighlight{
+         background-color : red !important;
+     }
+     
+     .even{
+         background-color:#f0f9fc;
+     
+     }
+     
+     .apexDefaultPageBlock {
+         background-color:white !important;
+     }
+     
+    /* .pbSubsection {
+         height:400px !important; 
+         overflow-y:scroll !important;
+     }*/
+</style> 
+</head>
+    <apex:Form id="formId">
+    
+    <!-- Validation for selected object -->
+    <script type="text/javascript">
+        function checkObject(){ 
+        //alert('test');
+        var objectIsEmpty  = document.getElementById('{!$Component.ProfilePermissionManagement.formId.pbId.str.pbsId.selectedObj}').value; 
+        //alert('testtt   '+a);
+        
+        // Validation to check if the user is selected
+
+         var previous = false;
+         var inputElemm = document.getElementsByTagName("input");
+
+         for(var ii=0; ii<inputElemm.length; ii++)
+         {
+                 
+             if(inputElemm[ii].id.indexOf("ch2")!=-1){
+                 if(inputElemm[ii].checked){
+                     previous = true;
+                     break;
+                 }    
+             }    
+         }
+        if(!previous){
+            alert('You forgot to select a User!!');
+            return false;
+        }
+        
+        if (objectIsEmpty=='None'){
+            alert('You forgot to select an Object!');
+            return false;
+        }
+        else{
+            //alert('I am here');
+            submituser();
+            return true;          
+        }
+        }
+        
+        function deselect(){ 
+            //alert('test');
+            document.getElementById("ProfilePermissionManagement:formId:pbId:pr:userList:pb:ip1").value = 0;
+        }     
+    
+
+    </script>
+    
+    <apex:actionFunction name="submituser" action="{!submitUsers}" reRender="ObjectResults,SystemPermissions,ObjectPermissions,FieldPermissions"/>
+        <apex:pageBlock id="pbId">
+         <apex:outputPanel id="ProfileResults" > 
+             <apex:pageBlockSection title="Profiles" id="pr">
+                        <apex:pageBlockSectionItem >
+
+                            <apex:pageBlockTable id="AllProfiles" value="{!allProfileSelector}" var="prf" ><!-- value="{!currenthelptipsMap}" var="HelpMap" -->
+    
+                                <apex:column headervalue="Select" title="Select" >
+                                    <apex:facet name="header">
+                                        <apex:inputCheckbox id="ip1">
+                                            <apex:actionSupport event="onclick" onsubmit="checkAllusr(this)" rerender="Selected_P"/>
+                                        </apex:inputCheckbox>
+                                    </apex:facet>
+                                    <apex:inputcheckbox value="{!prf.selectedProfile}"  id="check1"/>
+                                </apex:column> 
+                                <apex:column value="{!prf.thisProfile}" headervalue="Profile Name"/>
+                            </apex:pageBlockTable>
+                        </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem id="userList">
+                    <apex:Pagemessages rendered="{!!displayUsers}"/>
+                       <apex:outputPanel rendered="{!displayUsers}">
+                        <!-- NEED STATEMENT WHEN PROFILES ARE EMPTY       --> 
+                            
+                            <apex:outputPanel layout="block" styleClass="pSearchShowMore" id="otpNav2">
+                              Total Records Found: <apex:outputText rendered="{!IF(Con.resultSize==10000,true,false)}">10000 +</apex:outputText><apex:outputText rendered="{!IF(Con.resultSize < 10000,true,false)}">{!Con.resultSize}</apex:outputText>
+                                  <apex:image url="/img/search_prevarrow_disabled.gif" styleClass="prevArrow" rendered="{!NOT(Con.HasPrevious)}"/>
+                                  <apex:image url="/img/search_prevarrow.gif" title="Previous Page" styleClass="prevArrow" rendered="{!Con.HasPrevious}"/>
+                                  <apex:commandLink action="{!Previous}" title="Previous Page" value="Previous Page" rendered="{!Con.HasPrevious}" />
+                                  <apex:outputPanel styleClass="pShowLess noLink" style="color:grey" rendered="{!NOT(Con.HasPrevious)}">Previous Page</apex:outputPanel>         
+                                  &nbsp;({!IF(Con.PageNumber == 1,1,((Con.PageNumber -1) * Con.PageSize)+1)}-{!IF(Con.resultSize < Con.PageSize,Con.resultSize,Con.PageNumber * Con.pageSize)})&nbsp;
+                                  <apex:outputPanel styleClass="pShowLess noLink" style="color:grey" rendered="{!NOT(Con.HasNext)}">Next Page</apex:outputPanel>         
+                                  <apex:commandLink title="Next Page" value="Next Page" rendered="{!Con.HasNext}" action="{!Next}" />&nbsp;
+                                  <apex:image url="/img/search_nextarrow.gif" title="Next Page" styleClass="nextArrow" rendered="{!Con.HasNext}"/>
+                                  <apex:image url="/img/search_nextarrow_disabled.gif" rendered="{!NOT(Con.HasNext)}"/>          
+                            </apex:outputPanel>
+                              
+                            <apex:pageBlockTable value="{!allUserSelector}" var="thisusr" rendered="{!displayUsers}" id="pb">
+                                <apex:column headervalue="Select" title="Select" >
+                                    <apex:facet name="header" >
+                                        <apex:inputCheckbox id="ip1">
+                                        <apex:actionSupport event="onclick" onsubmit="checkAllselectedusr(this)" rerender="Selected_u"/>
+                                        </apex:inputCheckbox>
+                                    </apex:facet>
+                                    <apex:inputcheckbox value="{!thisusr.selectedUser}" id="ch2"/>
+                                </apex:column> 
+                                <apex:column value="{!thisusr.usr.Name}" headervalue="User Name" title="User Name"/> 
+                            </apex:pageBlockTable>
+                            <apex:outputPanel layout="block" styleClass="pSearchShowMore" id="otpNav">
+                              Total Records Found: <apex:outputText rendered="{!IF(Con.resultSize==10000,true,false)}">10000 +</apex:outputText><apex:outputText rendered="{!IF(Con.resultSize < 10000,true,false)}">{!Con.resultSize}</apex:outputText>
+                                  <apex:image url="/img/search_prevarrow_disabled.gif" styleClass="prevArrow" rendered="{!NOT(Con.HasPrevious)}"/>
+                                  <apex:image url="/img/search_prevarrow.gif" title="Previous Page" styleClass="prevArrow" rendered="{!Con.HasPrevious}"/>
+                                  <apex:commandLink action="{!Previous}" onclick="deselect();" title="Previous Page" value="Previous Page" rendered="{!Con.HasPrevious}"/>
+                                  <apex:outputPanel styleClass="pShowLess noLink" style="color:grey" rendered="{!NOT(Con.HasPrevious)}">Previous Page</apex:outputPanel>         
+                                  &nbsp;({!IF(Con.PageNumber == 1,1,((Con.PageNumber -1) * Con.PageSize)+1)}-{!IF(Con.resultSize < Con.PageSize,Con.resultSize,Con.PageNumber * Con.pageSize)})&nbsp;
+                                  <apex:outputPanel styleClass="pShowLess noLink" style="color:grey" rendered="{!NOT(Con.HasNext)}">Next Page</apex:outputPanel>         
+                                  <apex:commandLink title="Next Page" value="Next Page" rendered="{!Con.HasNext}" action="{!Next}" onclick="deselect();"/>&nbsp;
+                                  <apex:image url="/img/search_nextarrow.gif" title="Next Page" styleClass="nextArrow" rendered="{!Con.HasNext}"/>
+                                  <apex:image url="/img/search_nextarrow_disabled.gif" rendered="{!NOT(Con.HasNext)}"/>          
+                              </apex:outputPanel>
+                            </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                       
+                    <apex:pageBlockSectionItem >
+                        <apex:commandbutton value="Submit Profiles" action="{!submitProfiles}" rerender="ProfileResults" />
+                        
+                        <!-- creation of button -->
+                    </apex:pageBlockSectionItem>  
+                </apex:pageBlockSection>           
+            </apex:outputPanel>
+            <apex:outputPanel id="ObjectResults">
+                <apex:pageMessages rendered="{!selectusr}"/>
+                <apex:outputText value="{!debugText}" />
+                <apex:pageBlockSection title="Objects" id="str">
+                    <apex:pageBlockSectionItem id="pbsId">
+                        <apex:outputLabel value="Select Object"/>
+                        <apex:selectList id="selectedObj" value="{!selectedObj}" size="1" Onchange="FetchData();">
+                              <apex:selectOptions value="{!ObjectValues}"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:actionFunction name="FetchData" action="{!Searchfilds}" reRender="fldid"/>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel />
+                        <apex:outputPanel style="height:400px !important; overflow-y:hidden !important;">
+                            <apex:pageBlockTable value="{!fileds}" var="a" id="fldid">
+                                <apex:column >
+                                    <apex:facet name="header">
+                                        <apex:inputCheckbox > 
+                                            <apex:actionSupport event="onclick" onsubmit="checkAllfilds(this)" rerender="Selected_PBS"/>
+                                        </apex:inputCheckbox>
+                                    </apex:facet>
+                                    <apex:inputCheckbox value="{!a.selectedfield}" id="checkedone"/>
+                                </apex:column>
+                                <apex:column headerValue="List of Fields" value="{!a.con}"/>
+                            </apex:pageBlockTable>
+                            <script>
+                                    oTable = $('[id $= "fldid"]').dataTable({
+                                        "bJQueryUI": true,
+                                        "iDeferLoading": null,
+                                        "sDom" : 't>',
+                                        "sScrollY": "500",
+                                        "bScrollCollapse": true,
+                                        "bSort": false
+                                    });
+                           </script>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem > <!-- action="{!submitUsers}" -->
+                        
+                        <input type="button" class="btn" value="Submit Users" onclick="checkObject();" />
+                        
+                       <!--
+                        <apex:commandlink styleClass="btn" value="Submit Users" onclick="checkObject();" style="padding:2px 5px 2px 5px; text-decoration:none;"/>
+                        -->
+                        <!--    
+                        <apex:commandbutton value="Submit Users" onclick="checkObject();"/>
+                        
+                        <apex:commandbutton value="Submit Users" onclick="checkObject();" rerender="ObjectResults,SystemPermissions,ObjectPermissions,FieldPermissions" />
+                        -->
+                        <apex:outputLabel value="Before selecting this button please select the User(s) from the list and one Object"/>
+                    </apex:pageBlockSectionItem> 
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+            
+            <apex:outputPanel id="SystemPermissions">
+                <apex:repeat value="{!calculatedSystemPermissions}" var="user">
+                    <apex:pageBlockSection title="System Permissions for {!user.Name}">
+                        <table>
+                            <tr><th>Manage Dynamic Dashboards</th><td>{!calculatedSystemPermissions[user].PermissionsManageDynamicDashboards}</td></tr>
+                            <tr><th>Manage Dashboards</th><td>{!calculatedSystemPermissions[user].PermissionsManageDashboards}</td></tr>
+                            <tr><th>Manage Custom Report Types </th><td>{!calculatedSystemPermissions[user].PermissionsManageCustomReportTypes }</td></tr>
+                            <tr><th>Email Template Management</th><td>{!calculatedSystemPermissions[user].PermissionsEmailTemplateManagement}</td></tr>
+                            <tr><th>Email Administration</th><td>{!calculatedSystemPermissions[user].PermissionsEmailAdministration}</td></tr>
+                            
+                        </table>
+                        <apex:outputLink value="/{!user.profileid}/e" target="_blank">Edit {!user.Name}</apex:outputLink>
+                    </apex:pageBlockSection>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:outputPanel id="ObjectPermissions">
+                <apex:repeat value="{!calculatedObjectPermissions}" var="user">
+                    <p>{!user.Name}</p>
+                    <apex:repeat value="{!calculatedObjectPermissions[user]}" var="objPerms">
+                        <apex:pageBlockSection title="Object Permissions for {!user.Name} for {!objPerms.SobjectType}">
+                            <table>
+                                <tr><th>Create</th><td>{!objPerms.PermissionsCreate}</td></tr>
+                                <tr><th>Read</th><td>{!objPerms.PermissionsRead}</td></tr>
+                                <tr><th>Edit</th><td>{!objPerms.PermissionsEdit}</td></tr>
+                                <tr><th>Delete</th><td>{!objPerms.PermissionsDelete}</td></tr>
+                                <tr><th>...</th><td>...</td></tr>
+                            </table>
+                        </apex:pageBlockSection>
+                    </apex:repeat>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:outputPanel id="FieldPermissions">
+                <apex:repeat value="{!calculatedFieldPermissions}" var="u">
+                    <p>{!u.Name}</p>
+                    <apex:repeat value="{!calculatedFieldPermissions[u]}" var="fldPerms">
+                        <apex:pageBlockSection title="Field Permissions for {!u.Name} for {!fldPerms.Field}">
+                            <table>
+                                <tr><th>Read</th><td>{!fldPerms.PermissionsRead}</td></tr>
+                                <tr><th>Edit</th><td>{!fldPerms.PermissionsEdit}</td></tr>
+                                <tr><th>...</th><td>...</td></tr>
+                            </table>
+                        </apex:pageBlockSection>
+                    </apex:repeat>
+                </apex:repeat>
+            </apex:outputPanel>
+            
+            
+<!--              <apex:outputPanel id="PermissionResults" >
+<!--                 <apex:pageBlockSection title="Permissions"> -->
+<!--                     <apex:pageBlockSectionItem > -->
+<!--                         <apex:pageBlockTable value="{!pr}" var="thisusr">value="{!currenthelptipsMap}" var="HelpMap"                            -->
+<!--                         <apex:column value="{!usr}" headervalue="User" title="User "/> -->
+<!--                         <apex:column value="{!selectedObj}" headervalue="Permission Name" title="Permission Name"/> -->
+<!--                          </apex:pageBlockTable> -->
+<!--             </apex:pageBlockSectionItem> -->
+<!--                 </apex:pageBlockSection> -->
+<!--             </apex:outputPanel> -->
+<!--             -->
+            
+            
+           <!-- <apex:outputPanel id="UserResults" >
+                <apex:pageBlockSection title="Users">         
+           <apex:pageBlockSectionItem >
+            <apex:pageBlockTable value="{!pr}" var="prf">value="{!currenthelptipsMap}" var="HelpMap"
+                            <apex:column value="{!prf.Name}" headervalue="User" title="User"/>
+                            <apex:column value="{!usr}" headervalue="Create" title="Create"/>
+                            <apex:column value="{!usr}" headervalue="Read" title="Read"/>
+                            <apex:column value="{!usr}" headervalue="Update" title="Update"/>
+                            <apex:column value="{!usr}" headervalue="Delete" title="Delete"/>
+                             <apex:column value="{!}" headervalue="Profile" title="Profile"/>
+                        </apex:pageBlockTable>
+           
+           </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:outputPanel> -->
+           
+        </apex:pageBlock>
+    </apex:Form>
+    <script>
+        function checkAllfilds(cb)
+        {
+            var inputElem = document.getElementsByTagName("input");
+            for(var i=0; i<inputElem.length; i++)
+            {
+                if(inputElem[i].id.indexOf("checkedone")!=-1)
+                inputElem[i].checked = cb.checked;
+            }
+        }
+        function checkAllusr(cb)
+        {
+            var inputElem = document.getElementsByTagName("input");
+            for(var i=0; i<inputElem.length; i++)
+            {
+                if(inputElem[i].id.indexOf("check1")!=-1)
+                inputElem[i].checked = cb.checked;
+            }
+        }
+        function checkAllselectedusr(cb)
+        {
+            var inputElem = document.getElementsByTagName("input");
+            for(var i=0; i<inputElem.length; i++)
+            {
+                if(inputElem[i].id.indexOf("ch2")!=-1)
+                inputElem[i].checked = cb.checked;
+            }
+        }
+    </script>
+</apex:page>

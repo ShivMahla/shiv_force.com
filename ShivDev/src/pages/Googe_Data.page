@@ -1,0 +1,6 @@
+<apex:page controller="IntegrationController">
+AccessToken : {! accessToken}
+<apex:form >
+	<apex:commandButton action="{!fetchAllFilesFromDrive}" value="Save" id="theButton"/>
+</apex:form>
+</apex:page>

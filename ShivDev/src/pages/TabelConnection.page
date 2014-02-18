@@ -1,0 +1,11 @@
+<apex:page standardController="Tabel2__c" extensions="Tabel1Tabel2Connection">
+<apex:form > 
+<apex:repeat value="{!Employee}" var="Rec">
+<table>
+<tr><td>ID</td><td><apex:outputField value="{!Rec.Name}"/></td></tr>
+<tr><td>Name</td><td><apex:outputField value="{!Rec.Employee__c}"/></td></tr>
+<tr><td>Salary</td><td><apex:outputField value="{!Rec.Salary__c}"/></td></tr>
+</table>
+</apex:repeat>
+</apex:form>
+</apex:page>

@@ -1,0 +1,12 @@
+<apex:page controller="testAccount">
+	<apex:form >
+	  <apex:commandButton action="{! save}" value="save"/>
+		<apex:pageblock >
+			<apex:pageblocksection > 
+			    <apex:repeat value="{! fieldList}" var="rec" >
+					<apex:inputField value="{! act[rec]}"/>
+				</apex:repeat>
+			</apex:pageblocksection>
+		</apex:pageblock>
+	</apex:form>
+</apex:page>

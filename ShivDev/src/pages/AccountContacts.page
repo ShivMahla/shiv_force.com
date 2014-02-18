@@ -1,0 +1,8 @@
+<apex:page controller="DynamicForm">
+<!-- Create section header dynamically -->
+<apex:dynamicComponent componentValue="{!SectionHeader}"/>
+<apex:form >
+<!-- Create dynamic input form for account object -->
+<apex:dynamicComponent componentValue="{!ActionForm}"/>
+</apex:form>
+</apex:page>

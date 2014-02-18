@@ -1,0 +1,8 @@
+<apex:page standardController="Employee__c" extensions="MyControllerClass" >
+<table>
+    <tr><td>Name</td><td>Age</td></tr>
+    <apex:repeat value="{!MyEmployee}" var="Rec">
+        <tr><td><apex:outputField value="{!Rec.Name}"/></td><td><apex:outputField value="{!Rec.Age__c}"/></td></tr>
+    </apex:repeat>
+</table>
+</apex:page>

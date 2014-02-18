@@ -1,0 +1,8 @@
+<apex:page standardController="Account" extensions="ListController">
+<apex:pageMessages ></apex:pageMessages>
+<apex:panelGroup id="test">
+  <apex:form >
+<c:Clone recId="{!acct.id}" ></c:Clone>
+    </apex:form> 
+</apex:panelGroup>
+</apex:page>

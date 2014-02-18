@@ -1,0 +1,38 @@
+<!-- Copyright (c) 2012, 2013 All Rights Reserved
+//
+// This source is subject to the BigKite License granted to Skin Vitality, and only Skin Vitality.
+// All code is owned solely by BigKite and BigKite hereby grants
+// Skin Vitality a worldwide, perpetual, non-exclusive, non-transferable, royalty-free license to use and
+// modify such work product solely for its internal business purposes.
+// All other rights reserved. -->
+
+<apex:page contentType="text/plain" controller="calendarMainClass" action="{!LoadAltogether}">      
+<apex:variable value="{!0}" var="cntResource"/>
+<apex:variable value="{!ResourceWrapperList.size}" var="maxResource"/>
+[<apex:repeat value="{!ResourceWrapperList}" var="ev" >{
+            "id": "{!ev.Id}",
+            "start_date":"{!ev.StartISO}",
+            "end_date":"{!ev.EndISO}",
+            "title":"123",
+            "section_id":"{!ev.resourceId}",
+            "ResourceName": "{!ev.ResourceName}",
+            "staffName": "{!ev.staffName}",
+            "staffNameValue": "{!ev.staffName}",
+            "resourceId":"{!ev.resourceId}",
+            "ObjectName":"{!ev.ObjectName}",
+            "className": "{!ev.className}",
+            "clinic":"{!ev.clinic}",
+            "clinicName":"{!ev.clinicName}",
+            "url":"{!ev.url}",
+            "description":"abc",
+            "leadsource":"",
+            "vis":{!ev.visible},
+            "startTimeDisplay":"",
+            "endTimeDisplay":"",
+            "color": "{!if( ISNULL(ev.staffName), '#9890D3','red'   )}"  ,
+            "editable": {!ev.editable}
+}<apex:variable value="{!cntResource+1}" var="cntResource"/> 
+<apex:variable value="sdf" var="sdf" rendered="{! cntResource != maxResource}" >,</apex:variable> 
+</apex:repeat>
+]
+</apex:page>

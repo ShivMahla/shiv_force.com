@@ -1,0 +1,933 @@
+<!-- Copyright (c) 2012, 2013 All Rights Reserved
+//
+// This source is subject to the BigKite License granted to Skin Vitality, and only Skin Vitality.
+// All code is owned solely by BigKite and BigKite hereby grants
+// Skin Vitality a worldwide, perpetual, non-exclusive, non-transferable, royalty-free license to use and
+// modify such work product solely for its internal business purposes.
+// All other rights reserved. -->
+
+<apex:page contentType="text/css">
+           html, body{
+             margin:0px;
+             padding:0px;
+             height:100%;
+             
+          }   
+          body{
+             
+             overflow-y:scroll;
+          }   
+         .dhx_cal_event_line.custom, .dhx_cal_event.custom div{
+            background-color:#fd7;
+            border-color:#da6;
+            color:#444;
+         }
+            .imgLookup
+            {
+              position: absolute;
+              clip:rect(0px,22px,19px,0px);
+            }
+             .imgLookup:hover
+            {
+              rect(0px,43px,20px,17px);
+               
+            }
+          .fc-agenda-body{
+                overflow:auto;        
+            }
+            
+            div.fc-agenda-body> *:nth-child(1) {
+                overflow:visible !important;
+                background-color: white;
+            }
+    
+            div.fc-agenda-body> *:nth-child(1)> *:nth-child(1){
+            }
+    
+            div {
+                overflow:none;
+            }
+            
+        /*    .resourceEvent{
+                margin-left:5px !important;
+                width:110px !important;
+            } */
+          
+            .resourceWithStaff{
+                border-style: solid;
+                border-color: #66cc33; 
+                background-color:#66cc33;
+                color: white;
+            }
+    
+            .InputDisabled{
+                background:yellow;
+            }
+            
+            .Multi {
+                width: auto;
+                height:auto;                
+                line-height: 2em;
+                border: 0px solid #ccc;
+                padding: 0;
+                margin: 0;
+                overflow: scroll;
+                overflow-x: hidden;
+                scrollbar-base-color: red;
+            }
+            .Multi li
+            {
+             height:25px;
+             margin:2px 0px 2px 0px;
+             list-style-type:none;
+           
+            }
+           .boxlabel
+            {
+                background-color:#1796B0;
+                border:none;  
+                -webkit-border-radius: 5px;
+                -o-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                padding: 4px;
+               
+            }
+                      
+            
+            label
+             {
+                style="display:inline"
+            }
+            
+            div.panellStaff{
+                height:265px;
+                width:220px;
+                display:none;
+            }
+            
+            div.panellStaff,p.flipStaff {
+                margin-bottom:8px;
+                padding:5px;        
+                text-align:center;
+                background:#e5eecc;
+                border:solid 1px #c3c3c3;
+                border:solid 1px #c3c3c3;
+                border-top-left-radius:5px;
+                border-top-right-radius:5px;
+                border-bottom-left-radius:5px;
+                border-bottom-right-radius:5px;
+            } 
+            
+            div.panellResource {
+                height:300px;
+                width:220px;
+                margin-bottom:20px;
+                display:none;
+            }           
+        
+            div.panellResource,p.flipResource {
+                margin:0px;
+                padding:5px;  
+                margin-bottom:10px;      
+                text-align:center;
+                background:#e5eecc;
+                border:solid 1px #c3c3c3;
+                border-top-left-radius:5px;
+                border-top-right-radius:5px;
+                border-bottom-left-radius:5px;
+                border-bottom-right-radius:5px;
+            }
+            
+            .btn {
+                height:25px;
+                width:75px;
+            }
+            
+            .Booked { 
+                color:##3366CC;
+                background-color:#3366CC;
+                border-color:#3366CC;
+            }
+            
+            .Cancelled { 
+                color:#FF0000;
+                background-color:#FF0000;
+                border-color:#FF0000;
+            }
+            
+            .Confirmed {
+                color:#33CC00;
+                background-color:#33CC00;
+                border-color:#33CC00;
+            }
+            
+            .NoShow { 
+                color:#800080;
+                background-color:#800080;
+                border-color:#800080;
+            }
+            
+            .Arrived { 
+                color:#342826;
+                background-color:#342826;
+                border-color:#342826;
+            }
+            
+            .Cashedout {
+                color:#554C4D;
+                background-color:#554C4D;
+                border-color:#554C4D;
+            }
+            
+            .defaultclass { 
+                color:#66CCCC;
+                background-color:#66CCCC;
+                border-color:#66CCCC;
+            }
+            
+            div.panell {
+                height:270px;
+                width:183px;
+                display:none;
+            }
+            
+            div.panell,p.flip {
+                padding:5px;        
+                text-align:center;
+                background:#e5eecc;
+                border:solid 1px #c3c3c3;
+                border-top-left-radius:5px;
+                border-top-right-radius:5px;
+                border-bottom-left-radius:5px;
+                border-bottom-right-radius:5px;
+            }  
+            
+            #wrapper {
+                width:560px;
+                margin:0 auto;
+                padding-top:100px;
+            }
+            
+            .item {
+                float:left;
+                margin:0 20px;
+            }
+            
+            a {
+                text-decoration:none;
+            }
+            
+            a:hover {
+                text-decoration:none;
+            }
+            
+            .small {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 12px;
+                font-weight:bold;
+                padding: 4px 8px;
+                cursor:pointer; 
+                line-height:16px;
+                margin:0 3px 7px 2px;
+                display:inline-block;
+            }
+            
+            .medium {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 14px;
+                font-weight:bold;
+                padding: 11px 15px;
+                cursor:pointer; 
+                line-height:18px;
+                margin:0 10px 20px 0;
+                display:inline-block;
+            }
+            
+            
+            .big {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 16px;
+                font-weight:bold;
+                padding: 15px 20px;
+                cursor:pointer; 
+                line-height:20px;
+                margin:0 10px 20px 0;
+                display:inline-block;
+            }
+            
+            .button {
+                border-radius: 2px;
+                -moz-border-radius: 2px;
+                -webkit-border-radius: 2px; 
+                behavior:url(PIE.htc);      
+                box-shadow: #e3e3e3 0 1px 1px;  
+                -moz-box-shadow:
+                    0px 1px 1px rgba(000,000,000,0.1),
+                    inset 0px 1px 1px rgba(255,255,255,0.7);
+                -webkit-box-shadow:
+                    0px 1px 1px rgba(000,000,000,0.1),
+                    inset 0px 1px 1px rgba(255,255,255,0.7);    
+                behavior:url(PIE.htc);
+            }
+            
+            .orange {
+                text-shadow: 1px 1px 0px #ffe8b2;
+                color: #7c5d1b;
+                border: 1px solid #d6a437;  
+                background: #febd4b; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#fed970) to(#febd4b)); /*old webkit*/
+                background: -webkit-linear-gradient(#fed970, #febd4b); /*new webkit*/
+                background: -moz-linear-gradient(#fed970, #febd4b); /*gecko*/
+                background: -ms-linear-gradient(#fed970, #febd4b); /*IE10*/
+                background: -o-linear-gradient(#fed970, #febd4b); /*opera 11.10+*/
+                background: linear-gradient(#fed970, #febd4b); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#fed970, #febd4b); /*PIE*/
+            }
+            
+            .orange:hover {
+                color: #7c5d1b;
+                border: 1px solid #d6a437;  
+                background: #febd4b; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#febd4b) to(#fed970)); /*old webkit*/
+                background: -webkit-linear-gradient(#febd4b, #fed970); /*new webkit*/
+                background: -moz-linear-gradient(#febd4b, #fed970); /*gecko*/
+                background: -ms-linear-gradient(#febd4b, #fed970); /*IE10*/
+                background: -o-linear-gradient(#febd4b, #fed970); /*opera 11.10+*/
+                background: linear-gradient(#febd4b, #fed970); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#febd4b, #fed970); /*PIE*/ 
+            }
+            
+            
+            .orange-hover {
+                text-shadow: 1px 1px 0px #ffe8b2;
+                color: #7c5d1b;
+                border: 1px solid #d6a437;  
+                background: #febd4b; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#febd4b) to(#fed970)); /*old webkit*/
+                background: -webkit-linear-gradient(#febd4b, #fed970); /*new webkit*/
+                background: -moz-linear-gradient(#febd4b, #fed970); /*gecko*/
+                background: -ms-linear-gradient(#febd4b, #fed970); /*IE10*/
+                background: -o-linear-gradient(#febd4b, #fed970); /*opera 11.10+*/
+                background: linear-gradient(#febd4b, #fed970); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#febd4b, #fed970); /*PIE*/ 
+            }
+            
+            
+            .yellow {
+                text-shadow: 1px 1px 0px #ffefcb;
+                color: #897931;
+                border: 1px solid #dac34b;  
+                background: #feed7a; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#feed7a) to(#fedb5e)); /*old webkit*/
+                background: -webkit-linear-gradient(#feed7a, #fedb5e); /*new webkit*/
+                background: -moz-linear-gradient(#feed7a, #fedb5e); /*gecko*/
+                background: -ms-linear-gradient(#feed7a, #fedb5e); /*IE10*/
+                background: -o-linear-gradient(#feed7a, #fedb5e); /*opera 11.10+*/
+                background: linear-gradient(#feed7a, #fedb5e); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#feed7a, #fedb5e); /*PIE*/
+            }
+            
+            .yellow:hover {
+                color: #897931;
+                border: 1px solid #dac34b;  
+                background: #fedb5e; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#fedb5e) to(#feed7a)); /*old webkit*/
+                background: -webkit-linear-gradient(#fedb5e, #feed7a); /*new webkit*/
+                background: -moz-linear-gradient(#fedb5e, #feed7a); /*gecko*/
+                background: -ms-linear-gradient(#fedb5e, #feed7a); /*IE10*/
+                background: -o-linear-gradient(#fedb5e, #feed7a); /*opera 11.10+*/
+                background: linear-gradient(#fedb5e, #feed7a); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#fedb5e, #feed7a); /*PIE*/ 
+            }
+            
+            .yellow-hover {
+                text-shadow: 1px 1px 0px #ffefcb;
+                color: #897931;
+                border: 1px solid #dac34b;  
+                background: #fedb5e; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#fedb5e) to(#feed7a)); /*old webkit*/
+                background: -webkit-linear-gradient(#fedb5e, #feed7a); /*new webkit*/
+                background: -moz-linear-gradient(#fedb5e, #feed7a); /*gecko*/
+                background: -ms-linear-gradient(#fedb5e, #feed7a); /*IE10*/
+                background: -o-linear-gradient(#fedb5e, #feed7a); /*opera 11.10+*/
+                background: linear-gradient(#fedb5e, #feed7a); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#fedb5e, #feed7a); /*PIE*/
+            }
+
+            .red {
+                text-shadow: 1px 1px 0px #ffb5b6;
+                color: #993333;
+                border: 1px solid #dc5653;  
+                background: #fe5d62; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#fe8781) to(#fe5d62)); /*old webkit*/
+                background: -webkit-linear-gradient(#fe8781, #fe5d62); /*new webkit*/
+                background: -moz-linear-gradient(#fe8781, #fe5d62); /*gecko*/
+                background: -ms-linear-gradient(#fe8781, #fe5d62); /*IE10*/
+                background: -o-linear-gradient(#fe8781, #fe5d62); /*opera 11.10+*/
+                background: linear-gradient(#fe8781, #fe5d62); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#fe8781, #fe5d62); /*PIE*/
+            }
+            
+            .red:hover{
+                color: #993333;
+                border: 1px solid #dc5653;  
+                background: #fe5d62; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#fe5d62) to(#fe8781)); /*old webkit*/
+                background: -webkit-linear-gradient(#fe5d62, #fe8781); /*new webkit*/
+                background: -moz-linear-gradient(#fe5d62, #fe8781); /*gecko*/
+                background: -ms-linear-gradient(#fe5d62, #fe8781); /*IE10*/
+                background: -o-linear-gradient(#fe5d62, #fe8781); /*opera 11.10+*/
+                background: linear-gradient(#fe5d62, #fe8781); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#fe5d62, #fe8781); /*PIE*/ 
+            }
+            
+            .red-hover {
+                text-shadow: 1px 1px 0px #ffb5b6;
+                color: #993333;
+                border: 1px solid #dc5653;  
+                background: #fe5d62; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#fe5d62) to(#fe8781)); /*old webkit*/
+                background: -webkit-linear-gradient(#fe5d62, #fe8781); /*new webkit*/
+                background: -moz-linear-gradient(#fe5d62, #fe8781); /*gecko*/
+                background: -ms-linear-gradient(#fe5d62, #fe8781); /*IE10*/
+                background: -o-linear-gradient(#fe5d62, #fe8781); /*opera 11.10+*/
+                background: linear-gradient(#fe5d62, #fe8781); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#fe5d62, #fe8781); /*PIE*/ 
+            }
+            
+            .purple {
+                text-shadow: 1px 1px 0px #fbb6f5;
+                color: #993333;
+                border: 1px solid #dc53ce;  
+                background: #f264eb; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#fd81eb) to(#f264eb)); /*old webkit*/
+                background: -webkit-linear-gradient(#fd81eb, #f264eb); /*new webkit*/
+                background: -moz-linear-gradient(#fd81eb, #f264eb); /*gecko*/
+                background: -ms-linear-gradient(#fd81eb, #f264eb); /*IE10*/
+                background: -o-linear-gradient(#fd81eb, #f264eb); /*opera 11.10+*/
+                background: linear-gradient(#fd81eb, #f264eb); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#fd81eb, #f264eb); /*PIE*/
+    
+    
+            }
+            
+            .purple:hover {
+                color: #993333;
+                border: 1px solid #dc53ce;  
+                background: #f264eb; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#f264eb) to(#fd81eb)); /*old webkit*/
+                background: -webkit-linear-gradient(#f264eb, #fd81eb); /*new webkit*/
+                background: -moz-linear-gradient(#f264eb, #fd81eb); /*gecko*/
+                background: -ms-linear-gradient(#f264eb, #fd81eb); /*IE10*/
+                background: -o-linear-gradient(#f264eb, #fd81eb); /*opera 11.10+*/
+                background: linear-gradient(#f264eb, #fd81eb); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#f264eb, #fd81eb); /*PIE*/ 
+            }
+            
+            .purple-hover {
+                text-shadow: 1px 1px 0px #fbb6f5;
+                color: #993333;
+                border: 1px solid #dc53ce;  
+                background: #f264eb; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#f264eb) to(#fd81eb)); /*old webkit*/
+                background: -webkit-linear-gradient(#f264eb, #fd81eb); /*new webkit*/
+                background: -moz-linear-gradient(#f264eb, #fd81eb); /*gecko*/
+                background: -ms-linear-gradient(#f264eb, #fd81eb); /*IE10*/
+                background: -o-linear-gradient(#f264eb, #fd81eb); /*opera 11.10+*/
+                background: linear-gradient(#f264eb, #fd81eb); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#f264eb, #fd81eb); /*PIE*/ 
+            }
+            
+            .green {
+                text-shadow: 1px 1px 0px #d6f3ae;
+                color: #587930;
+                border: 1px solid #86be46;  
+                background: #a7e059; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#baf765) to(#a7e059)); /*old webkit*/
+                background: -webkit-linear-gradient(#baf765, #a7e059); /*new webkit*/
+                background: -moz-linear-gradient(#baf765, #a7e059); /*gecko*/
+                background: -ms-linear-gradient(#baf765, #a7e059); /*IE10*/
+                background: -o-linear-gradient(#baf765, #a7e059); /*opera 11.10+*/
+                background: linear-gradient(#baf765, #a7e059); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#baf765, #a7e059); /*PIE*/
+        
+            }
+            
+            .green:hover {
+                color: #587930;
+                border: 1px solid #86be46;  
+                background: #a7e059; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#a7e059) to(#baf765)); /*old webkit*/
+                background: -webkit-linear-gradient(#a7e059, #baf765); /*new webkit*/
+                background: -moz-linear-gradient(#a7e059, #baf765); /*gecko*/
+                background: -ms-linear-gradient(#a7e059, #baf765); /*IE10*/
+                background: -o-linear-gradient(#a7e059, #baf765); /*opera 11.10+*/
+                background: linear-gradient(#a7e059, #baf765); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#a7e059, #baf765); /*PIE*/ 
+            }
+            
+            .green-hover {
+                text-shadow: 1px 1px 0px #d6f3ae;
+                color: #587930;
+                border: 1px solid #86be46;  
+                background: #a7e059; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#a7e059) to(#baf765)); /*old webkit*/
+                background: -webkit-linear-gradient(#a7e059, #baf765); /*new webkit*/
+                background: -moz-linear-gradient(#a7e059, #baf765); /*gecko*/
+                background: -ms-linear-gradient(#a7e059, #baf765); /*IE10*/
+                background: -o-linear-gradient(#a7e059, #baf765); /*opera 11.10+*/
+                background: linear-gradient(#a7e059, #baf765); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#a7e059, #baf765); /*PIE*/ 
+            }
+            
+            .blue {
+                text-shadow: 1px 1px 0px #b3e8f9;
+                color: #3c7389;
+                border: 1px solid #4bb6da;  
+                background: #5ccded; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#7ad6fc) to(#5ccded)); /*old webkit*/
+                background: -webkit-linear-gradient(#7ad6fc, #5ccded); /*new webkit*/
+                background: -moz-linear-gradient(#7ad6fc, #5ccded); /*gecko*/
+                background: -ms-linear-gradient(#7ad6fc, #5ccded); /*IE10*/
+                background: -o-linear-gradient(#7ad6fc, #5ccded); /*opera 11.10+*/
+                background: linear-gradient(#7ad6fc, #5ccded); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#7ad6fc, #5ccded); /*PIE*/
+            }
+            
+            .blue:hover {
+                color: #3c7389;
+                border: 1px solid #4bb6da;  
+                background: #5ccded; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#5ccded) to(#7ad6fc)); /*old webkit*/
+                background: -webkit-linear-gradient(#5ccded, #7ad6fc); /*new webkit*/
+                background: -moz-linear-gradient(#5ccded, #7ad6fc); /*gecko*/
+                background: -ms-linear-gradient(#5ccded, #7ad6fc); /*IE10*/
+                background: -o-linear-gradient(#5ccded, #7ad6fc); /*opera 11.10+*/
+                background: linear-gradient(#5ccded, #7ad6fc); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#5ccded, #7ad6fc); /*PIE*/ 
+            }
+            
+            .blue-hover {
+                text-shadow: 1px 1px 0px #b3e8f9;
+                color: #3c7389;
+                border: 1px solid #4bb6da;  
+                background: #5ccded; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#5ccded) to(#7ad6fc)); /*old webkit*/
+                background: -webkit-linear-gradient(#5ccded, #7ad6fc); /*new webkit*/
+                background: -moz-linear-gradient(#5ccded, #7ad6fc); /*gecko*/
+                background: -ms-linear-gradient(#5ccded, #7ad6fc); /*IE10*/
+                background: -o-linear-gradient(#5ccded, #7ad6fc); /*opera 11.10+*/
+                background: linear-gradient(#5ccded, #7ad6fc); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#5ccded, #7ad6fc); /*PIE*/ 
+            }
+            
+            .white {
+                text-shadow: 1px 1px 0px #f8f8f8;
+                color: #717171;
+                border: 1px solid #d3d3d3;  
+                background: #ededed; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#f9f9f9) to(#ededed)); /*old webkit*/
+                background: -webkit-linear-gradient(#f9f9f9, #ededed); /*new webkit*/
+                background: -moz-linear-gradient(#f9f9f9, #ededed); /*gecko*/
+                background: -ms-linear-gradient(#f9f9f9, #ededed); /*IE10*/
+                background: -o-linear-gradient(#f9f9f9, #ededed); /*opera 11.10+*/
+                background: linear-gradient(#f9f9f9, #ededed); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#f9f9f9, #ededed); /*PIE*/ 
+            }
+            
+            .white:hover {
+                color: #717171;
+                border: 1px solid #d3d3d3;  
+                background: #ededed; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#ededed) to(#f9f9f9)); /*old webkit*/
+                background: -webkit-linear-gradient(#ededed, #f9f9f9); /*new webkit*/
+                background: -moz-linear-gradient(#ededed, #f9f9f9); /*gecko*/
+                background: -ms-linear-gradient(#ededed, #f9f9f9); /*IE10*/
+                background: -o-linear-gradient(#ededed, #f9f9f9); /*opera 11.10+*/
+                background: linear-gradient(#ededed, #f9f9f9); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#ededed, #f9f9f9); /*PIE*/ 
+            }
+            
+            .white-hover {
+                text-shadow: 1px 1px 0px #f8f8f8;
+                color: #717171;
+                border: 1px solid #d3d3d3;  
+                background: #ededed; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#ededed) to(#f9f9f9)); /*old webkit*/
+                background: -webkit-linear-gradient(#ededed, #f9f9f9); /*new webkit*/
+                background: -moz-linear-gradient(#ededed, #f9f9f9); /*gecko*/
+                background: -ms-linear-gradient(#ededed, #f9f9f9); /*IE10*/
+                background: -o-linear-gradient(#ededed, #f9f9f9); /*opera 11.10+*/
+                background: linear-gradient(#ededed, #f9f9f9); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#ededed, #f9f9f9); /*PIE*/ 
+            }
+            
+            .black {
+                text-shadow: 1px 1px 0px #1f1f1f;
+                color: #fff;
+                border: 1px solid #464646;  
+                background: #616161; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#848484) to(#616161)); /*old webkit*/
+                background: -webkit-linear-gradient(#848484, #616161); /*new webkit*/
+                background: -moz-linear-gradient(#848484, #616161); /*gecko*/
+                background: -ms-linear-gradient(#848484, #616161); /*IE10*/
+                background: -o-linear-gradient(#848484, #616161); /*opera 11.10+*/
+                background: linear-gradient(#848484, #616161); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#848484, #616161); /*PIE*/ 
+            }
+            
+            .black:hover {
+                color: #fff;
+                border: 1px solid #464646;  
+                background: #616161; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#616161) to(#848484)); /*old webkit*/
+                background: -webkit-linear-gradient(#616161, #848484); /*new webkit*/
+                background: -moz-linear-gradient(#616161, #848484); /*gecko*/
+                background: -ms-linear-gradient(#616161, #848484); /*IE10*/
+                background: -o-linear-gradient(#616161, #848484); /*opera 11.10+*/
+                background: linear-gradient(#616161, #848484); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#616161, #848484); /*PIE*/ 
+            }
+            
+            .black-hover {
+                text-shadow: 1px 1px 0px #1f1f1f;
+                color: #fff;
+                border: 1px solid #464646;  
+                background: #616161; /*fallback for non-CSS3 browsers*/
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#616161) to(#848484)); /*old webkit*/
+                background: -webkit-linear-gradient(#616161, #848484); /*new webkit*/
+                background: -moz-linear-gradient(#616161, #848484); /*gecko*/
+                background: -ms-linear-gradient(#616161, #848484); /*IE10*/
+                background: -o-linear-gradient(#616161, #848484); /*opera 11.10+*/
+                background: linear-gradient(#616161, #848484); /*future CSS3 browsers*/
+                -pie-background: linear-gradient(#616161, #848484); /*PIE*/ 
+            }
+            
+            @font-face {
+                font-family: 'PTSansNarrowRegular';
+                src: ur l('PTN57F-webfont.eot');
+                src: url('PTN57F-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('PTN57F-webfont.woff') format('woff'),
+                     url('PTN57F-webfont.ttf') format('truetype'),
+                     url('PTN57F-webfont.svg#PTSansNarrowRegular') format('svg');
+                font-weight: normal;
+                font-style: normal;
+
+            }
+
+            @font-face {
+                font-family: 'PTSansCaptionBold';
+                src: url('PTC75F-webfont.eot');
+                src: url('PTC75F-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('PTC75F-webfont.woff') format('woff'),
+                     url('PTC75F-webfont.ttf') format('truetype'),
+                     url('PTC75F-webfont.svg#PTSansCaptionBold') format('svg');
+                font-weight: normal;
+                font-style: normal;
+
+            }
+
+            @font-face {
+                font-family: 'PTSansCaptionRegular';
+                src: url('PTC55F-webfont.eot');
+                src: url('PTC55F-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('PTC55F-webfont.woff') format('woff'),
+                     url('PTC55F-webfont.ttf') format('truetype'),
+                     url('PTC55F-webfont.svg#PTSansCaptionRegular') format('svg');
+                font-weight: normal;
+                font-style: normal;
+
+            }
+
+            @font-face {
+                font-family: 'PTSansBoldItalic';
+                src: url('PTS76F-webfont.eot');
+                src: url('PTS76F-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('PTS76F-webfont.woff') format('woff'),
+                     url('PTS76F-webfont.ttf') format('truetype'),
+                     url('PTS76F-webfont.svg#PTSansBoldItalic') format('svg');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'PTSansBold';
+                src: url('PTS75F-webfont.eot');
+                src: url('PTS75F-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('PTS75F-webfont.woff') format('woff'),
+                     url('PTS75F-webfont.ttf') format('truetype'),
+                     url('PTS75F-webfont.svg#PTSansBold') format('svg');
+                font-weight: normal;
+                font-style: normal;
+
+            }
+
+            @font-face {
+                font-family: 'PTSansItalic';
+                src: url('PTS56F-webfont.eot');
+                src: url('PTS56F-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('PTS56F-webfont.woff') format('woff'),
+                     url('PTS56F-webfont.ttf') format('truetype'),
+                     url('PTS56F-webfont.svg#PTSansItalic') format('svg');
+                font-weight: normal;
+                font-style: normal;
+
+            }
+
+            @font-face {
+                font-family: 'PTSansRegular';
+                src: url('pt-sans/PTS55F-webfont.eot');
+                src: url('pt-sans/PTS55F-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('pt-sans/PTS55F-webfont.woff') format('woff'),
+                     url('pt-sans/PTS55F-webfont.ttf') format('truetype'),
+                     url('pt-sans/PTS55F-webfont.svg#PTSansRegular') format('svg');
+                font-weight: normal;
+                font-style: normal;
+
+            }
+
+            @font-face {
+                font-family: 'PTSansNarrowBold';
+                src: url('PTN77F-webfont.eot');
+                src: url('PTN77F-webfont.eot?#iefix') format('embedded-opentype'),
+                     url('PTN77F-webfont.woff') format('woff'),
+                     url('PTN77F-webfont.ttf') format('truetype'),
+                     url('PTN77F-webfont.svg#PTSansNarrowBold') format('svg');
+                font-weight: normal;
+                font-style: normal;
+
+            }
+
+            h1 {
+                font-family:PTSansRegular;
+                font-size:30px;
+                text-align:center;
+                color:#747474;
+                padding-bottom:30px;
+                text-shadow: 2px 2px 0px #e8e8e8;
+            }
+            
+            #bar {
+                background-color: #2f2f2f;
+                bottom: 0;
+                border-top:2px solid #eeeeee;
+                height: 50px;
+                left: 0;
+                position: fixed;
+                width: 100%;
+                z-index: 100000;
+                display:block;
+            }
+            
+            #innerbar {
+                width:900px;
+                margin:0 auto;
+            }
+            
+            #innerbar h2 {
+                font-family:PTSansRegular;
+                color: #bdbdbd;
+                font-size: 14px;
+                font-weight: normal;
+                padding: 13px 0 0;
+                text-align:center;
+                margin:0;
+                padding-top:16px;
+            }
+            
+            #innerbar a {
+                color:#fff;
+            }           
+            
+            div.panel,p.flip {
+                margin:0px;
+                padding:5px;        
+                text-align:center;
+                background:#e5eecc;
+                border:solid 1px #c3c3c3;
+            }
+            
+            div.panel {
+                height:250px;
+                display:none;
+            }   
+            
+            .fc-event a {
+                background:none;
+            }
+            .chkBox{
+                vertical-align:middle;
+                margin-right:5px;
+            }
+            
+            .roundedInput{
+                border: solid 1px #E5E5E5;  
+                outline: 0;  
+                font: normal 13px/100% Verdana, Tahoma, sans-serif;  
+                width: 170px;  
+                background: #FFFFFF url('bg_form.png') left top repeat-x;  
+                background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));  
+                background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);  
+                box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+                -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+                -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+                -webkit-border-radius: 4px;
+                -moz-border-radius: 4px;
+                border-radius: 4px;               
+            }
+            
+            .adjustmentpanel{
+                display: none;
+                z-index: 10000;
+                background-color: snow;
+                background: snow;
+                width: 380px;
+                height: 160px;
+                border: 0px solid #666;
+                opacity: 1.80;
+                -moz-border-radius: 10px;
+                -webkit-border-radius: 10px;
+           }
+           
+           .adjustmentpanel {
+                display: none;
+                z-index: 10000;
+                background-color: snow;
+                width: 380px;
+                height: 160px;
+                border: 0px solid #666;
+            
+                opacity: 1.80;
+                -moz-border-radius: 10px;
+                -webkit-border-radius: 10px;
+           }
+           
+           .BookedBooked
+    {
+        display:none;
+    }
+    .OutBooked
+    {
+        display:none;
+    }
+    .showBooked
+    {
+        display:none;
+    }
+    
+   <!-- for confirmed -------> 
+    
+    .BookedConfirmed
+    {
+        display:none;
+    }
+    
+    .ConfirmedConfirmed
+    {
+        display:none;
+    }
+    
+    .OutConfirmed
+    {
+        display:none;
+    }
+    
+    .showConfirmed
+    {
+        display:none;
+    }
+    
+  <!-- for cancelled---------------------->  
+  
+    .ConfirmedCancelled
+    {
+        display:none;
+    }
+    .ArrivedCancelled
+    {
+        display:none;
+    }
+    .OutCancelled
+    {
+        display:none;
+    }
+    .showCancelled
+    {
+        display:none;
+    }
+    .CancelledCancelled
+    {
+        display:none;
+    }
+    
+    <!-- for arrived -->
+    .BookedArrived
+    {
+        display:none;
+    }
+    .ConfirmedArrived
+    {
+        display:none;
+    }
+     .ArrivedArrived
+    {
+        display:none;
+    }
+    .showArrived
+    {
+        display:none;
+    }
+    .CancelledArrived
+    {
+        display:none;
+    }
+    
+   <!-- for Cashed out -->
+   
+    .BookedCashed
+    {
+        display:none;
+    }
+    .ConfirmedCashed
+    {
+        display:none;
+    }
+     .ArrivedCashed
+    {
+        display:none;
+    }
+    .showCashed
+    {
+        display:none;
+    }
+    .CancelledCashed
+    {
+        display:none;
+    }
+    .OutCashed
+    {
+        display:none;
+    }
+    
+    <!-- css for conditional hovering  -->
+    .staffAppointment{
+     display:none;
+    }
+    .ResourceAppointment{
+     display:none;
+    }
+    .staffResourceSchedule{
+     display:none;
+    }
+    .ResourceStaffSchedule{
+     display:none;
+    }
+
+    .AppointmentStaffSchedule{
+        display:none;
+    }
+    .AppointmentResourceSchedule{
+        display:none;
+    }
+</apex:page>

@@ -1,0 +1,208 @@
+<!-- Copyright (c) 2012, 2013 All Rights Reserved
+//
+// This source is subject to the BigKite License granted to Skin Vitality, and only Skin Vitality.
+// All code is owned solely by BigKite and BigKite hereby grants
+// Skin Vitality a worldwide, perpetual, non-exclusive, non-transferable, royalty-free license to use and
+// modify such work product solely for its internal business purposes.
+// All other rights reserved. -->
+
+<apex:page showHeader="false" controller="LookupController">
+        <apex:panelGroup rendered="{!$CurrentPage.parameters.page == 'patient' }">
+        <apex:form >
+
+        <apex:pageBlock title="Lookup">
+              <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionitem >
+                  <apex:outputLabel value="Patient"/>
+                  <apex:outputPanel >          
+                     <apex:inputText size="40" value="{!SearchString}" id="targetName"   />   <apex:commandButton value="Go" action="{!LookupPatients}"/> <input class="btn" type="button" value="New Patient" onclick="javascript: window.location = '/apex/NewContact?namefield={!$CurrentPage.parameters.namefield}&idfield={!$CurrentPage.parameters.idfield}'" />
+                  </apex:outputPanel>
+                </apex:pageBlockSectionitem>
+              </apex:pageBlockSection>
+         
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{! ContactList.size == 0  }" >
+                 <apex:pageBlockSection columns="1">
+                       <b>No Results found for search</b>  
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        <apex:pageBlock rendered="{! ContactList.size > 0  }" >
+                  <apex:pageBlockSection columns="1">
+                      <apex:pageBlockTable value="{!ContactList}" var="Opporunity">
+                        <apex:column headerValue="Name">
+                          <apex:outputLink value="#" onclick="fillIn('{!Opporunity.Name}', '{!Opporunity.id}')">{!Opporunity.Name}</apex:outputLink>       
+                        </apex:column>
+                        <apex:column headerValue="Street" value="{!Opporunity.Name}"/>
+                        <apex:column headerValue="City" value="{!Opporunity.Name}"/>
+                        <apex:column headerValue="Postcode" value="{!Opporunity.Name}"/>
+                      </apex:pageBlockTable>    
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        </apex:form>
+       </apex:panelGroup>
+        <apex:panelGroup rendered="{!$CurrentPage.parameters.page == 'treatment' }">
+        <apex:form >
+
+        <apex:pageBlock title="Lookup">
+              <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionitem >
+                  <apex:outputLabel value="Treatment"/>
+                  <apex:outputPanel >          
+                     <apex:inputText size="40" value="{!SearchString}" id="targetName"   />   <apex:commandButton value="Go" action="{!LookupTreatments}"/>
+                  </apex:outputPanel>
+                </apex:pageBlockSectionitem>
+              </apex:pageBlockSection>
+         
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{! TreatmentList.size == 0  }" >
+                 <apex:pageBlockSection columns="1">
+                       <b>No Results found for search</b>  
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        <apex:pageBlock rendered="{! TreatmentList.size > 0  }" >
+                  <apex:pageBlockSection columns="1">
+                      <apex:pageBlockTable value="{!TreatmentList}" var="Opporunity">
+                        <apex:column headerValue="Name">
+                          <apex:outputLink value="#" onclick="fillIn('{!Opporunity.Name}', '{!Opporunity.id}')">{!Opporunity.Name}</apex:outputLink>       
+                        </apex:column>
+                       
+                     <!--   <apex:column headerValue="City" value="{!Opporunity.Name}"/>
+                        <apex:column headerValue="Postcode" value="{!Opporunity.Name}"/> -->
+                      </apex:pageBlockTable>    
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        </apex:form>
+       </apex:panelGroup>
+       <apex:panelGroup rendered="{!$CurrentPage.parameters.page == 'staff' }">
+        <apex:form >
+
+        <apex:pageBlock title="Lookup">
+              <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionitem >
+                  <apex:outputLabel value="Staff"/>
+                  <apex:outputPanel >          
+                     <apex:inputText size="40" value="{!SearchString}" id="targetName"   />   <apex:commandButton value="Go" action="{!LookupStaffs}"/>
+                  </apex:outputPanel>
+                </apex:pageBlockSectionitem>
+              </apex:pageBlockSection>
+         
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{! StaffList.size == 0  }" >
+                 <apex:pageBlockSection columns="1">
+                       <b>No Results found for search</b>  
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        <apex:pageBlock rendered="{! StaffList.size > 0  }" >
+                  <apex:pageBlockSection columns="1">
+                      <apex:pageBlockTable value="{!StaffList}" var="Staff">
+                        <apex:column headerValue="Name">
+                          <apex:outputLink value="#" onclick="fillIn('{!Staff.Name}', '{!Staff.id}')">{!Staff.Name}</apex:outputLink>       
+                        </apex:column>
+                       <apex:column headerValue="Street" value="{!Staff.Clinic__r.Name}"/> 
+                       <apex:column headerValue="Street" value="{!Staff.Phone_Number__c }"/> 
+                      </apex:pageBlockTable>    
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        </apex:form>
+       </apex:panelGroup>
+        <apex:panelGroup rendered="{!$CurrentPage.parameters.page == 'AppointmentSource' }">
+        <apex:form >
+
+        <apex:pageBlock title="Lookup">
+              <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionitem >
+                  <apex:outputLabel value="Appointment Source"/>
+                  <apex:outputPanel >          
+                     <apex:inputText size="40" value="{!SearchString}" id="targetName"   />   <apex:commandButton value="Go" action="{!LookupAppSource}"/>
+                  </apex:outputPanel>
+                </apex:pageBlockSectionitem>
+              </apex:pageBlockSection>
+         
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{! AppointmentSourcelist.size == 0  }" >
+                 <apex:pageBlockSection columns="1">
+                       <b>No Results found for search</b>  
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        <apex:pageBlock rendered="{! AppointmentSourcelist.size > 0  }" >
+                  <apex:pageBlockSection columns="1">
+                      <apex:pageBlockTable value="{!AppointmentSourcelist}" var="Sourcelist">
+                        <apex:column headerValue="Name">
+                          <apex:outputLink value="#" onclick="fillIn('{!Sourcelist.Name}', '{!Sourcelist.id}')">{!Sourcelist.Name}</apex:outputLink>       
+                        </apex:column>
+                       <apex:column headerValue="Start Date" value="{!Sourcelist.StartDate }"/> 
+                       <apex:column headerValue="End Date" value="{!Sourcelist.EndDate}"/> 
+                      </apex:pageBlockTable>    
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        </apex:form>
+       </apex:panelGroup>
+          <apex:panelGroup rendered="{!$CurrentPage.parameters.page == 'AppointmentReferel' }">
+        <apex:form >
+
+        <apex:pageBlock title="Lookup">
+              <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionitem >
+                  <apex:outputLabel value="Referral Card"/>
+                  <apex:outputPanel >          
+                     <apex:inputText size="40" value="{!SearchString}" id="targetName"   />   <apex:commandButton value="Go" action="{!LookupAppReferel}"/>
+                  </apex:outputPanel>
+                </apex:pageBlockSectionitem>
+              </apex:pageBlockSection>
+         
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{! ReferralList.size == 0  }" >
+                 <apex:pageBlockSection columns="1">
+                       <b>No Results found for search</b>  
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        <apex:pageBlock rendered="{! ReferralList.size > 0  }" >
+                  <apex:pageBlockSection columns="1">
+                      <apex:pageBlockTable value="{!ReferralList}" var="Referral">
+                        <apex:column headerValue="Name">
+                          <apex:outputLink value="#" onclick="fillIn('{!Referral.Name}', '{!Referral.id}')">{!Referral.Name}</apex:outputLink>       
+                        </apex:column>
+                       <apex:column headerValue="Card Type" value="{!Referral.Referral_Card_Type__c }"/> 
+                       <apex:column headerValue="Referrer Patient" value="{!Referral.Used_By_Referrer_Patient__c}"/>  
+                       <apex:column headerValue="Discount" value="{!Referral.Discount__c }"/> 
+                      </apex:pageBlockTable>    
+                  </apex:pageBlockSection>
+         </apex:pageBlock>
+
+        </apex:form>
+       </apex:panelGroup>
+<script type="text/javascript">
+function fillIn(name, id)
+   {
+       var winMain=window.opener;
+      if (null==winMain)
+      {
+         winMain=window.parent.opener;
+      }
+      var ele=winMain.document.getElementById('{!$CurrentPage.parameters.namefield}');
+      ele.value=name;
+      ele=winMain.document.getElementById('{!$CurrentPage.parameters.idfield}');
+      ele.value=id;
+       CloseWindow();
+   }
+ 
+   function CloseWindow()
+   {
+      var winMain=window.opener;
+      if (null==winMain)
+      {
+         winMain=window.parent.opener;
+      }
+      winMain.closeLookupPopup();
+   }
+</script>
+</apex:page>

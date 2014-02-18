@@ -1,0 +1,8 @@
+<apex:page standardController="TrialOne__c" extensions="TrialOneDisplay">
+<table border="1"  style="border: thin solid black; border-collapse:collapse;;">
+<tr><th>Name</th><th>Is It Working</th></tr>
+<apex:repeat value="{!Data}" var="Rec">
+<tr><td><apex:outputField value="{!Rec.Name}"/></td> <td><apex:outputField value="!Rec.is_it_working__c"/></td></tr>
+</apex:repeat>
+</table>
+</apex:page>

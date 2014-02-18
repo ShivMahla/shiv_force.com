@@ -1,0 +1,4 @@
+<apex:component >
+    <apex:attribute name="recId" required="true" type="id"  description="Id of record which need to be cloned"/>
+    <apex:commandButton value="Clone" action="{! cloneRecords }" /> 
+</apex:component>

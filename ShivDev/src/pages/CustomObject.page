@@ -1,0 +1,7 @@
+<apex:page controller="ApprovalEnabledObjectsController">  
+<apex:form >  
+    <apex:selectlist multiselect="false" size="1">  
+        <apex:selectoptions value="{!supportedObject}">  
+    </apex:selectoptions></apex:selectlist>  
+</apex:form>  
+</apex:page>

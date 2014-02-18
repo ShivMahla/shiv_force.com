@@ -1,0 +1,8 @@
+<apex:page controller="A">
+<apex:form >
+
+<apex:commandButton action="{! firstExCon}" onClick="true" reRender="abc" value="firstEXCon" />
+<apex:commandButton action="{! secExCon}" onClick="true" reRender="abc" value="secExCon" />
+</apex:form>
+
+</apex:page>

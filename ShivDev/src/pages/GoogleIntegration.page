@@ -1,0 +1,12 @@
+<apex:page controller="IntegrationController">
+<apex:form >
+  <script>
+    function openWindow()
+    {
+	   window.location = '{! baseLink}';
+    }
+  </script>
+  <apex:commandButton value="Google Login"  onclick="openWindow();"/>
+  <button type="button" onclick="openWindow();">Google Login</button>
+</apex:form>
+</apex:page>

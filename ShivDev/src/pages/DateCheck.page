@@ -1,0 +1,5 @@
+<apex:page controller="DateCheck">
+<apex:form >
+    <apex:inputText value="{! startDate}"/> 
+</apex:form>
+</apex:page>

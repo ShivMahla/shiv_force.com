@@ -1,0 +1,213 @@
+<apex:page controller="ClientSuccessChart">
+	<!-- Angular JSON -->
+	<!-- <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"/> -->
+	<apex:includeScript value="{! $Resource.AngularJS}" />
+
+   
+
+	<script>
+		var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+		angular.module('ClientSuccess.directives').directive('dispositionWidget', function() {
+		  return {
+		    restrict: 'EA',
+		    templateUrl: 'https://c.ap1.visual.force.com/apex/dispositionWidget',
+		    scope: {
+		      data: [{"startDate":"2014-01-15T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":7},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":4},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":134},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2014-01-14T00:00:00Z","riskLevels":[{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":135},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":6}]},{"startDate":"2014-01-13T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":6},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":135},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2}]},{"startDate":"2014-01-12T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":6},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":135},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2}]},{"startDate":"2014-01-11T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":6},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":135},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2}]},{"startDate":"2014-01-10T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":5},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":136},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3}]},{"startDate":"2014-01-09T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":5},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":133},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3}]},{"startDate":"2014-01-08T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":133},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3}]},{"startDate":"2014-01-07T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":133},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2}]},{"startDate":"2014-01-06T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":4},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":133},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3}]},{"startDate":"2014-01-05T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":4},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":133},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3}]},{"startDate":"2014-01-04T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":4},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":133},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3}]},{"startDate":"2014-01-03T00:00:00Z","riskLevels":[{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":4},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":133},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2014-01-02T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":134},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3}]},{"startDate":"2014-01-01T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":134},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":3}]},{"startDate":"2013-12-31T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":135},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2}]},{"startDate":"2013-12-30T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":135},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2}]},{"startDate":"2013-12-29T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":135},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2}]},{"startDate":"2013-12-28T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":137},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-27T00:00:00Z","riskLevels":[{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":26}]},{"startDate":"2013-12-26T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":21},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-25T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":21},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-24T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":21},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-23T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":21},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-22T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":21},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-21T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":21},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-20T00:00:00Z","riskLevels":[{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":21},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2}]},{"startDate":"2013-12-19T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":20},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":2},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-18T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":20},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":2},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-17T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":20},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":2},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-16T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":4},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":19},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":2},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-15T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":4},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":19},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2}]},{"startDate":"2013-12-14T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":18},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2}]},{"startDate":"2013-12-13T00:00:00Z","riskLevels":[{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":18},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3}]},{"startDate":"2013-12-12T00:00:00Z","riskLevels":[{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":18},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2}]},{"startDate":"2013-12-11T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":18},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":2},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-10T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":12},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":1},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2}]},{"startDate":"2013-12-09T00:00:00Z","riskLevels":[]},{"startDate":"2013-12-08T00:00:00Z","riskLevels":[]},{"startDate":"2013-12-07T00:00:00Z","riskLevels":[]},{"startDate":"2013-12-06T00:00:00Z","riskLevels":[]},{"startDate":"2013-12-05T00:00:00Z","riskLevels":[]},{"startDate":"2013-12-04T00:00:00Z","riskLevels":[{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":10},{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":4},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":18},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1}]},{"startDate":"2013-12-03T00:00:00Z","riskLevels":[{"riskLevelId":4,"riskLevel":"Some Risk","numberOfClientsAtThisPosition":3},{"riskLevelId":5,"riskLevel":"High Risk","numberOfClientsAtThisPosition":10},{"riskLevelId":1,"riskLevel":"Extremely Satisfied","numberOfClientsAtThisPosition":4},{"riskLevelId":6,"riskLevel":"Severe Risk","numberOfClientsAtThisPosition":2},{"riskLevelId":3,"riskLevel":"Fairly Satisfied","numberOfClientsAtThisPosition":18},{"riskLevelId":2,"riskLevel":"Very Satisfied","numberOfClientsAtThisPosition":1}]}],
+		      callback: "=callback"
+		    },
+		    controller: function($scope, $element, $attrs, $filter) {
+		      var DispositionWidget;
+		      DispositionWidget = (function() {
+		        function DispositionWidget() {
+		          this.generateLineChart = __bind(this.generateLineChart, this);
+		          this.openModal = __bind(this.openModal, this);
+		          this.showDispositionActive = __bind(this.showDispositionActive, this);
+		          this.initActiveDisposition = __bind(this.initActiveDisposition, this);
+		          this.data = $scope.data;
+		          console.log(this.data);
+		          this.callback = $scope.callback;
+		          this.activeDisposition = {};
+		          this.newDisposition = {};
+		          this.newDispositionActive = false;
+		          this.firstDisposition = _.first(this.data.history) || null;
+		          this.modal = {};
+		          this.prevCode = {};
+		          this["default"] = {
+		            reasonCodes: [],
+		            riskLevelId: this.data.codes[2].id,
+		            note: "",
+		            riskLevel: this.data.codes[2].name,
+		            numberOfDaysAtThisPosition: 1
+		          };
+		          this.initActiveDisposition(this.firstDisposition);
+		        }
+		
+		        DispositionWidget.prototype.initActiveDisposition = function(disposition) {
+		          if (disposition === null) {
+		            this.activeDisposition = this["default"];
+		            this.activeDisposition.$color = $filter('dispositionColor')(this["default"].riskLevelId);
+		            return this.activeDisposition.$code = this._getCodeByRiskLevelId(this["default"]);
+		          } else {
+		            this.activeDisposition = disposition;
+		            this.activeDisposition.$color = $filter('dispositionColor')(disposition.riskLevelId);
+		            return this.activeDisposition.$code = this._getCodeByRiskLevelId(disposition);
+		          }
+		        };
+		
+		        DispositionWidget.prototype.changeActiveDisposition = function(disposition) {
+		          return this.activeDisposition = disposition;
+		        };
+		
+		        DispositionWidget.prototype.cancelDispositionActive = function() {
+		          this.newDispositionActive = false;
+		          return this.activeDisposition.$code = this.prevCode;
+		        };
+		
+		        DispositionWidget.prototype.showDispositionActive = function(code) {
+		          this.prevCode = this.activeDisposition.$code;
+		          this.activeDisposition.$code = code;
+		          this.changeActiveDisposition(this.activeDisposition);
+		          return this.newDispositionActive = true;
+		        };
+		
+		        DispositionWidget.prototype._getCodeByRiskLevelId = function(disposition) {
+		          return _.first(_.filter(this.data.codes, function(code) {
+		            return code.id === disposition.riskLevelId;
+		          }));
+		        };
+		
+		        DispositionWidget.prototype.saveDisposition = function($event) {
+		          var dispositionObject,
+		            _this = this;
+		          dispositionObject = {
+		            reasonCodes: [],
+		            riskLevelId: this.activeDisposition.$code.id,
+		            createdByEmployeeId: null,
+		            createdTimestamp: null,
+		            productId: null,
+		            note: this.newDisposition.notes,
+		            riskLevel: this.activeDisposition.$code.name,
+		            riskLevelDiscription: null
+		          };
+		          if (this.newDisposition.firstreason) {
+		            this._pushNewReason(dispositionObject, this.newDisposition.firstreason);
+		          }
+		          if (this.newDisposition.secondreason) {
+		            this._pushNewReason(dispositionObject, this.newDisposition.secondreason);
+		          }
+		          if (this.newDisposition.thirdreason) {
+		            this._pushNewReason(dispositionObject, this.newDisposition.thirdreason);
+		          }
+		          if (dispositionObject.reasonCodes.length > 0 || dispositionObject.riskLevelId < 4) {
+		            this.newDispositionActive = false;
+		            dispositionObject.numberOfDaysAtThisPosition = 1;
+		            this.initActiveDisposition(dispositionObject);
+		            console.log(this.data);
+		            this.data.history.unshift(dispositionObject);
+		            this.callback(dispositionObject).then((function(data) {
+		              var newActive;
+		              _this.data = data;
+		              newActive = _.first(_this.data.history) || null;
+		              return _this.initActiveDisposition(newActive);
+		            }), function(error) {
+		              return console.log(error);
+		            });
+		          }
+		          return this.newDisposition = {};
+		        };
+		
+		        DispositionWidget.prototype._pushNewReason = function(dispositionObject, reason) {
+		          var reasonData;
+		          reasonData = JSON.parse(reason);
+		          return dispositionObject.reasonCodes.push({
+		            id: reasonData.id,
+		            name: reasonData.name,
+		            description: null,
+		            sequence: 0,
+		            categoryName: this._getReasonCategoryName(reasonData.reasonCodeCategoryId)
+		          });
+		        };
+		
+		        DispositionWidget.prototype._getReasonCategoryName = function(reasonCategoryId) {
+		          var codeName;
+		          codeName = "";
+		          _.each(this.data.reasonCodes, function(code) {
+		            if (code.id === reasonCategoryId) {
+		              return codeName = code.name;
+		            }
+		          });
+		          return codeName;
+		        };
+		
+		        DispositionWidget.prototype.openModal = function() {
+		          return this.generateLineChart();
+		        };
+		
+		        DispositionWidget.prototype.generateLineChart = function() {
+		          var chartData;
+		          chartData = this._generateLineData(this.data.history);
+		          return this.modal = {
+		            show: true,
+		            data: {
+		              history: this.data.history,
+		              lastRiskId: this.activeDisposition.riskLevelId,
+		              lastRiskLevel: this.activeDisposition.riskLevel,
+		              numberOfdays: this.activeDisposition.numberOfDaysAtThisPosition,
+		              graph: {
+		                labels: chartData.labelsData,
+		                datasets: [
+		                  {
+		                    strokeColor: "#666",
+		                    pointColor: "#666",
+		                    pointStrokeColor: "#fff",
+		                    data: chartData.graphPoints
+		                  }
+		                ]
+		              },
+		              graphOptions: {
+		                scaleOverride: true,
+		                scaleSteps: 7,
+		                scaleStepWidth: 1,
+		                scaleStartValue: 0,
+		                scaleShowGridLines: true,
+		                datasetFill: false,
+		                bezierCurve: false,
+		                showScaleLabels: true,
+		                animation: true,
+		                animationSteps: 60,
+		                animationEasing: "easeOutQuart"
+		              }
+		            }
+		          };
+		        };
+		
+		        DispositionWidget.prototype._generateLineData = function(history) {
+		          var data;
+		          data = {
+		            labelsData: [],
+		            graphPoints: []
+		          };
+		          angular.forEach(history, function(a, b) {
+		            if (b < 11) {
+		              data.labelsData.push($filter('date')(a.createdTimestamp, 'MM/d'));
+		              return data.graphPoints.push(7 - a.riskLevelId);
+		            }
+		          });
+		          data.labelsData.reverse();
+		          data.graphPoints.reverse();
+		          return data;
+		        };
+		
+		        return DispositionWidget;
+		
+		      })();
+		      return $scope.DWidget = new DispositionWidget;
+		    }
+		  };
+		});
+	</script>
+	
+
+
+</apex:page>

@@ -1,0 +1,18 @@
+<apex:page id="apexPage" controller="Ajax">
+    <apex:outputPanel id="panel1">
+        <script>
+            alert(1);
+            alert({! i})
+        </script>
+    </apex:outputPanel>
+    <apex:form id="formId">
+        <apex:inputText id="inputBox"/>
+        <apex:commandButton action="{! test}"  onclick="return true;"  id="clickOnMe"  value="click on me"/>
+        <script>
+            function temp1(){alert('testing');
+                alert(document.getElementById('apexPage:formId:inputBox').value);
+            }
+        </script>
+        <apex:actionFunction name="AF" action="{! test}" reRender="panel1"/>
+    </apex:form>
+</apex:page>

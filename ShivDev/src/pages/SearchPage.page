@@ -1,0 +1,276 @@
+<apex:page controller="SearchController" sidebar="false">
+    <style>
+        .pbSubheader
+        {
+            background-color: #63a4c5 !important;
+            border-color: #63a4c5 !important;
+        }
+        
+        .paginator {
+            margin: 0;
+            white-space: nowrap;
+            text-align: center;
+            position: relative;
+        }
+        
+        .prevNextLinks {
+            color: #a8a8a8;
+        }
+        
+        .prevNextLinks a {
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .prevNext {
+            margin: 0 3px;
+        }
+        
+        .firstpage {
+            background-image: url({! $Resource.paginationArrows});
+            background-repeat: no-repeat;
+            background-position: 0 1px;
+            width: 9px;
+            height: 10px;
+        }
+        
+        .firstpageoff {
+            background-image: url({! $Resource.paginationArrows});
+            background-repeat: no-repeat;
+            background-position: 0 -10px;
+            width: 9px;
+            height: 10px;
+        }
+        
+        .prevpage {
+            background-image: url({! $Resource.paginationArrows});
+            background-repeat: no-repeat;
+            background-position: -10px 1px;
+            margin: 0;
+            padding: 0;
+            width: 9px;
+            height: 10px;
+        }
+        
+        .prevpageoff {
+            background-image: url({! $Resource.paginationArrows});
+            background-repeat: no-repeat;
+            background-position: -10px -10px;
+            margin: 0;
+            padding: 0;
+            width: 9px;
+            height: 10px;
+        }
+        
+        .nextpage {
+            background-image: url({! $Resource.paginationArrows});
+            background-repeat: no-repeat;
+            background-position: -17px 1px;
+            width: 9px;
+            height: 10px;
+        }
+        
+        .nextpageoff {
+            background-image: url({! $Resource.paginationArrows});
+            background-repeat: no-repeat;
+            background-position: -17px -10px;
+            width: 9px;
+            height: 10px;
+        }
+        
+        .lastPage {
+            background-image: url({! $Resource.paginationArrows});
+            background-repeat: no-repeat;
+            background-position: -27px 1px;
+            width: 9px;
+            height: 10px;
+        }
+        
+        .lastpageoff {
+            background-image: url({! $Resource.paginationArrows});
+            background-repeat: no-repeat;
+            background-position: -27px -10px;
+            width: 9px;
+            height: 10px;
+        }
+        
+        .left {
+            position: absolute;
+            left: 0;
+        }
+            
+    </style>
+    <apex:form >
+        <apex:pageBlock title="Search">
+            <apex:pageBlockSection columns="3">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Select Record Type" for="RecordTypeId"/>
+                    <apex:selectList id="RecordTypeId" value="{! selectedRecordType}"  size="1">
+                        <apex:selectOptions value="{! recordTypeSelOpts}"/>
+                    </apex:selectList>
+                    </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>    
+            <apex:pageBlockButtons location="bottom">
+                <button type="button" style="width:30px;" onclick="createPageJS();">Go</button>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        
+        <apex:panelGroup id="layout">
+            <apex:panelGroup rendered="{! sections.size > 0}" >
+                <apex:pageBlock title="Define search criteria">
+                    <apex:repeat value="{! sections}" var="secRec">
+                        <apex:pageBlockSection title="{! secRec.sectionName}">
+                            <apex:repeat value="{! secRec.fieldApiList}" var="field">
+                                <apex:inputField value="{! sObjRec[field]}" required="false"/>
+                            </apex:repeat>
+                        </apex:pageBlockSection>
+                    </apex:repeat>
+                    <apex:pageBlockButtons >
+                        <apex:commandButton action="{! search}" value="Search" reRender="SearchResult"/>
+                    </apex:pageBlockButtons>
+                </apex:pageBlock>
+            </apex:panelGroup>
+        </apex:panelGroup>
+        
+        <apex:actionFunction action="{! createPage}" name="createPageJSAction" rerender="layout">
+            <apex:param name="JsonString" assignTo="{! strDescribeLayout}" value="" />
+        </apex:actionFunction>
+        
+        <apex:panelGroup id="SearchResult" >
+            <apex:pageBlock title="Search Result" rendered="{! selectList.size > 0}">
+    
+                <apex:pageBlockTable styleClass="checkableTable" value="{! selectList}" var="item">
+                    <apex:column >
+                        <apex:facet name="header">
+                            <input type="checkbox" id="selectall" />
+                        </apex:facet>
+                        <apex:inputCheckbox styleclass="case" value="{!item.isSelected}"/>
+                    </apex:column>
+                    <apex:repeat value="{! fieldList}" var="columnAPIName">
+                        <apex:column value="{! item.rec[columnAPIName]}" />
+                    </apex:repeat>
+                </apex:pageBlockTable> 
+                <!-- select all functionality -->
+               <script>
+                    $(function(){ 
+                    // add multiple select / deselect functionality
+                    $("#selectall").click(function () {
+                              $('.case').attr('checked', this.checked);
+                        });
+                     
+                        // if all checkbox are selected, check the selectall checkbox
+                        // and viceversa
+                        $(".case").click(function(){
+                     
+                                if($(".case").length == $(".case:checked").length) {
+                                    $("#selectall").attr("checked", "checked");
+                                } else {
+                                    $("#selectall").removeAttr("checked");
+                                }
+                         
+                        });
+                    });
+            </script>
+            <apex:panelGroup styleClass="paginator" layout="block">
+                <apex:outputPanel styleclass="left">
+                    <apex:selectList value="{! recordPerPage}" multiselect="false" size="1">
+                        <apex:selectOption itemValue="10" itemLabel="10" />
+                        <apex:selectOption itemValue="25" itemLabel="25" />
+                        <apex:selectOption itemValue="50" itemLabel="50" />
+                        <apex:selectOption itemValue="100" itemLabel="100" />
+                        <apex:selectOption itemValue="200" itemLabel="200" />
+                        
+                        <apex:actionSupport event="onchange" action="{! changePageSize}" rerender="SearchResult"/>
+                    </apex:selectList>
+                </apex:outputPanel>
+            
+                <apex:outputPanel styleclass="prevNextLinks">
+                    <apex:outputPanel styleClass="prevNext" rendered="{! isFirstPage}">
+                        <apex:image url="{! $Resource.s}" styleClass="firstpageoff" alt="first page"/>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel styleClass="prevNext" rendered="{! !isFirstPage}">
+                        <apex:commandLink action="{! firstPage}" reRender="SearchResult">
+                          <apex:image url="{! $Resource.s}" styleClass="firstpage" alt="first page"/>
+                        </apex:commandLink>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel styleClass="prevNext" rendered="{! isFirstPage}">
+                        <apex:image url="{! $Resource.s}" styleclass="prevpageoff" alt="Previous" />
+                        Previous
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel styleclass="prevNext" rendered="{! ! isFirstPage}">
+                        <apex:commandlink action="{! previoustPage}" reRender="SearchResult" style="text-decoration: none;" >   
+                            <apex:image url="{! $Resource.s}" styleclass="prevpage" alt="Previous" />   
+                            Previous    
+                        </apex:commandlink>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel styleClass="prevNext" rendered="{! isLastPage}">
+                        Next
+                        <apex:image url="{! $Resource.s}" styleclass="nextpageoff" alt="Next" />
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel styleClass="prevNext" rendered="{! !isLastPage}">
+                        <apex:commandlink action="{! nextPage}" reRender="SearchResult" style="text-decoration: none">
+                            Next
+                            <apex:image url="{! $Resource.s}" styleclass="nextpage" alt="Next" />
+                        </apex:commandlink>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel styleClass="prevNext" rendered="{! isLastPage}">
+                        <apex:image url="{! $Resource.s}" styleclass="lastpageoff" alt="last" />
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel styleClass="prevNext" rendered="{! !isLastPage}">
+                        <apex:commandLink action="{! LastPage}" reRender="SearchResult">
+                            <apex:image url="{! $Resource.s}" styleclass="lastPage" alt="last" />
+                        </apex:commandLink>
+                    </apex:outputPanel>
+                    
+                    
+                </apex:outputPanel>
+            </apex:panelGroup>
+        </apex:pageBlock> 
+    </apex:panelGroup>
+    </apex:form>
+
+    <apex:includeScript value="{!$Resource.jQueryLibrary}"/>
+    <script>
+        var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <script src="../../soap/ajax/29.0/connection.js" type="text/javascript"></script>
+    <script src="../../soap/ajax/29.0/apex.js" type="text/javascript"></script>
+    <script>
+
+        function createPageJS()
+        {
+            var result;     
+            var obj = '{! ObjectName}' ; 
+            var recordType = $("[id$='RecordTypeId']").val();
+            var type = 'Edit'; 
+        
+            if(type != 'CustomDetail' && type != 'CustomEdit') 
+            { 
+                if(recordType != '' && recordType != null) 
+                { 
+                    result = sforce.connection.describeLayout(obj, new Array(recordType)); 
+                    createPageJSAction(JSON.stringify(result));
+                    //sforce.apex.execute("SearchController", "createPage",{ObjectName: obj , describeLayout: ''+ JSON.stringify(result)}); 
+                } 
+                else 
+                { 
+                    result = sforce.connection.describeLayout(obj); 
+                } 
+            
+            } 
+            else 
+            { 
+            //sendResult('') ; 
+            }
+        }
+        
+    </script>
+    
+</apex:page>

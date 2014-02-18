@@ -1,0 +1,70 @@
+<apex:page controller="ProfilePermissionManagement1" standardStylesheets="true">
+<head>
+<style>
+     .brandTertiaryBgr 
+     {
+         background-color:#0c2053!important;
+     }
+     
+
+     
+     
+     .tableClass{
+         height: 300px !important;
+     }
+     
+     .odd {
+         background-color:#a8ddf0;
+     }
+     
+     .heighlight{
+         background-color : red !important;
+     }
+     
+     .even{
+         background-color:#f0f9fc;
+     
+     }
+     
+     .apexDefaultPageBlock {
+         background-color:white !important;
+     }
+     
+    /* .pbSubsection {
+         height:400px !important; 
+         overflow-y:scroll !important;
+     }*/
+</style> 
+</head>
+<apex:form >
+    <apex:pageBlock >
+        <apex:pageBlockSection title="Profiles">
+            <apex:pageBlockSectionItem >
+                <apex:pageBlockTable value="{! profileSelecterList}" var="pf">
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:inputCheckbox >
+                                <apex:actionSupport event="onclick" rerender="Selected_P" onsubmit="checkAllusr(this)"/>
+                            </apex:inputCheckbox>
+                        </apex:facet>
+                        <apex:inputCheckbox id="check1" value="{! pf.isProfileSelected }"/>
+                     </apex:column>   
+                     <apex:column >
+                         <apex:facet name="header">Profile Name</apex:facet>
+                         <apex:outputText value="{! pf.profileName }"></apex:outputText>
+                     </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:form>  
+<script>
+    function checkAllusr(cb){
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++){
+            if(inputElem[i].id.indexOf("check1")!=-1)
+                inputElem[i].checked = cb.checked;
+        }
+    }
+</script>  
+</apex:page>

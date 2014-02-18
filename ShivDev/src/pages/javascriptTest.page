@@ -1,0 +1,16 @@
+<apex:page >
+     <apex:form >
+         <apex:commandButton value="clkme" onclick="testScript();"/>
+     </apex:form>
+     <script>
+     function testScript(){
+    
+
+    var d = new Date();
+     
+    var date1= d.toString('yyyy-MM-dd');
+     alert(date1);
+     
+     }
+     </script>
+</apex:page>
