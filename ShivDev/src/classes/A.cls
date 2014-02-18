@@ -1,5 +1,5 @@
 Public Class A {
-	
+	//static demo
 	public  Boolean staticVar = true;
 	public Account act = new Account();
 	public String apexStr{
